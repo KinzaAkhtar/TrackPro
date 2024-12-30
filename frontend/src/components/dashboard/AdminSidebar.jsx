@@ -3,12 +3,12 @@ import sidebarLogo from '../../assets/sidebarLogo.png';
 import user from '../../assets/user.png';
 import {NavLink} from 'react-router-dom';
 import Avatar from 'react-avatar';
-import {FaCalendar, FaCog, FaDollarSign, FaHammer, FaHome, FaTachometerAlt, FaUser, FaUserFriends} from 'react-icons/fa'
+import {FaCalendar, FaCalendarCheck, FaCog, FaDollarSign, FaHammer, FaHome, FaTachometerAlt, FaUser, FaUserFriends} from 'react-icons/fa'
 
 const AdminSidebar = () => {
     return(
         //<div className="bg-gradient-to-t from-yellow-500 via-orange-700 to-red-700 text-white h-screen fixed left-0 top-0 bottom-0 sapce-y-2 w-64">
-        <div className="bg-gradient-to-t from-red-700 via-orange-700 to-yellow-300 text-white h-screen fixed left-0 top-0 bottom-0 sapce-y-2 w-64">
+        <div className="bg-gradient-to-t from-red-700 via-orange-700 to-yellow-300 text-white h-[95vh]  fixed left-3 top-3 bottom-0 sapce-y-2 w-64 rounded-lg">
             <div className="bg-white">
                 <img src={sidebarLogo} alt="Image 1" className=" w-25 mt-2" />
             </div>
@@ -31,7 +31,7 @@ const AdminSidebar = () => {
                     <span>Employees</span>
                 </NavLink>
                 <NavLink to="admin-dashboard/attendance" className="flex items-center space-x-4 bock py-2.5 px-4 hover:bg-yellow-600 rounded-lg">
-                    <FaCalendar className="mr-2"/>
+                    <FaCalendarCheck className="mr-2"/>
                     <span>Attendance Management</span>
                 </NavLink>
                 <NavLink to="admin-dashboard/payroll" className="flex items-center space-x-4 bock py-2.5 px-4 hover:bg-yellow-600 rounded-lg">
@@ -42,7 +42,7 @@ const AdminSidebar = () => {
                     <FaTachometerAlt className="mr-2"/>
                     <span>Performance Monitoring</span>
                 </NavLink>
-                <NavLink to="admin-dashboard/setting" className="flex items-center space-x-4 bock py-2.5 px-4 hover:bg-yellow-600 rounded-lg">
+                <NavLink to="admin-dashboard/settings" className="flex items-center space-x-4 bock py-2.5 px-4 hover:bg-yellow-600 rounded-lg">
                     <FaCog className="mr-2"/>
                     <span>Settings</span>
                 </NavLink>
