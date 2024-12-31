@@ -8,6 +8,7 @@ const HRDashboard = () => {
         <div className="flex">
             <HRSidebar/>
             <div className="flex-1 ml-64 bg-white-100 h-screen">
+                <div>Hr summary</div>
             <Navbar/>
             <Outlet/>
             </div>
