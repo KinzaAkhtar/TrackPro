@@ -5,6 +5,10 @@ import { Doughnut, Line, Bar } from "react-chartjs-2";
 import {Chart as ChartJS,CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcElement,PointElement,LineElement,} from "chart.js";
 import List from '../employee/List';
 
+
+// Registering the required chart.js components
+ChartJS.register(CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcElement,PointElement,LineElement);
+
 const AdminSummary = () => {
   const cardData = [
     { title: "Total Employees", value: 50, bgColor: "bg-red-500" },
@@ -111,7 +115,7 @@ const AdminSummary = () => {
           </Card>
         </Grid>
       </Grid>
-
+        
     
   
     </Box>

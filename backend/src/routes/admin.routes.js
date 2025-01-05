@@ -5,12 +5,12 @@ const router = Router()
 
 router.route("/addemployee").post(upload.fields([
     {
-        name: "cv",
+        name: "files[cv]",
         maxCount: 1
 
     },
     {
-        name: "dp",
+        name: "files[photo]",
         maxCount: 1
     }
 ]), AddEmployee)
