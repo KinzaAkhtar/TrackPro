@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { TextField, Button, Grid, Typography, LinearProgress } from "@mui/material";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // Step1 component wrapped with React.memo to prevent unnecessary re-renders
 const Step1 = React.memo(({ formData, handleInputChange }) => (
@@ -120,7 +121,7 @@ const Step2 = React.memo(({ formData, handleInputChange }) => (
           }}
           value={formData.employmentDetails.doj}
           onChange={(e) =>
-            handleInputChange("personalInfo", "doj", e.target.value)
+            handleInputChange("employmentDetails", "doj", e.target.value)
           }
         />
       </Grid>
@@ -194,7 +195,6 @@ const Step3 = React.memo(({ formData, handleInputChange, handleFileChange }) => 
             name="cv"
             hidden
             onChange={(e) =>
-              //handleInputChange("performance", "cv", e.target.files[0])
               handleFileChange("files", "cv", e.target.files[0])
             }
           />
@@ -208,7 +208,6 @@ const Step3 = React.memo(({ formData, handleInputChange, handleFileChange }) => 
             name="dp"
             hidden
             onChange={(e) =>
-              //handleInputChange("performance", "dp", e.target.files[0])
               handleFileChange("files", "dp", e.target.files[0])
             }
           />
@@ -246,34 +245,17 @@ const Step3 = React.memo(({ formData, handleInputChange, handleFileChange }) => 
 ));
 
 const EmployeeForm = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    personalInfo: {
-      fullName: "",
-      dob: "",
-      gender: "",
-      phone: "",
-      email: "",
-    },
-    employmentDetails: {
-      employeeID: "",
-      department: "",
-      designation: "",
-    },
-    portalLogin: {
-      workEmail: "",
-      password: "",
-    },
-    compensation: {
-      salary: "",
-    },
-    files: {
-      cv: null,
-      photo: null,
-    },
+    personalInfo: { fullName: "", dob: "", gender: "", phone: "", email: "" },
+    employmentDetails: { employeeID: "", department: "", designation: "", doj: "" },
+    portalLogin: { workEmail: "", password: "" },
+    compensation: { salary: "" },
+    files: { cv: null, photo: null },
   });
+  const [loading, setLoading] = useState(false);
 
-  // Handle input changes with useCallback to prevent unnecessary re-renders
   const handleInputChange = useCallback((section, field, value) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -284,7 +266,6 @@ const EmployeeForm = () => {
     }));
   }, []);
 
-  // Handle file input change
   const handleFileChange = (section, field, file) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -295,106 +276,68 @@ const EmployeeForm = () => {
     }));
   };
 
-
-  // Handle form submission (step 3 - Submit the data)
   const handleSubmit = async () => {
+    setLoading(true);
+
     // Validate before submission
-    if (step === 3) {
-      const { fullName, dob, gender, phone, email } = formData.personalInfo;
-      const { employeeID, department, designation } = formData.employmentDetails;
-      const { workEmail, password } = formData.portalLogin;
+    const { fullName, dob, gender, phone, email } = formData.personalInfo;
+    const { employeeID, department, designation } = formData.employmentDetails;
+    const { workEmail, password } = formData.portalLogin;
 
-      if (!fullName || !dob || !gender || !phone || !email || !employeeID || !department || !designation || !workEmail || !password) {
-        alert("Please fill in all the fields.");
-        return;
+    if (!fullName || !dob || !gender || !phone || !email || !employeeID || !department || !designation || !workEmail || !password) {
+      alert("Please fill in all the fields.");
+      return;
+    }
+
+    // Prepare data for submission
+    const submissionData = new FormData();
+
+    Object.keys(formData.personalInfo).forEach(key => {
+      submissionData.append(`personalInfo[${key}]`, formData.personalInfo[key]);
+    });
+
+    Object.keys(formData.employmentDetails).forEach(key => {
+      submissionData.append(`employmentDetails[${key}]`, formData.employmentDetails[key]);
+    });
+
+    Object.keys(formData.portalLogin).forEach(key => {
+      submissionData.append(`portalLogin[${key}]`, formData.portalLogin[key]);
+    });
+
+    submissionData.append("compensation[salary]", formData.compensation.salary);
+    submissionData.append("files[cv]", formData.files.cv);
+    submissionData.append("files[photo]", formData.files.photo);
+
+    try {
+      const response = await axios.post('/api/v1/admin/addemployee', submissionData, {
+        headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+
+      if (response.data.success) {
+        alert("Form submitted successfully!");
+        navigate("/admin-dashboard/employee");
+      } else {
+        alert("Something went wrong, please try again.");
       }
-
-      // Prepare data for submission
-      const submissionData = new FormData();
-
-      // Append personal info
-      Object.keys(formData.personalInfo).forEach(key => {
-        submissionData.append(`personalInfo[${key}]`, formData.personalInfo[key]);
-      });
-
-      // Append employment details
-      Object.keys(formData.employmentDetails).forEach(key => {
-        submissionData.append(`employmentDetails[${key}]`, formData.employmentDetails[key]);
-      });
-
-      // Append portal login details
-      Object.keys(formData.portalLogin).forEach(key => {
-        submissionData.append(`portalLogin[${key}]`, formData.portalLogin[key]);
-      });
-
-      // Append compensation details
-      submissionData.append("compensation[salary]", formData.compensation.salary);
-
-      // Append files (cv and photo)
-      submissionData.append("files[cv]", formData.files.cv);
-      submissionData.append("files[photo]", formData.files.photo);
-
-      // Send the data to the API
-      try {
-        const response = await axios.post('/api/v1/admin/addemployee', submissionData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            // Optionally include Authorization header if needed
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-
-        if (response.data.success) {
-          alert("Form submitted successfully!");
-          Navigate("/admin-dashboard/employee");
-        } else {
-          alert("Something went wrong, please try again.");
-        }
-      } catch (error) {
-        console.error(error);
-        alert("There was an error submitting the form.");
-      }
+    } catch (error) {
+      console.error(error);
+      alert("There was an error submitting the form.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Handle next step logic with validation
   const handleNext = () => {
-    if (step === 1) {
-      const { fullName, dob, gender, phone, email } = formData.personalInfo;
-      if (!fullName || !dob || !gender || !phone || !email) {
-        alert("Please fill in all the fields in Step 1.");
-        return;
-      }
-    } else if (step === 2) {
-      const { employeeID, department, designation } = formData.employmentDetails;
-      if (!employeeID || !department || !designation) {
-        alert("Please fill in all the fields in Step 2.");
-        return;
-      }
-    } else if (step === 3) {
-      const { workEmail, password } = formData.portalLogin;
-      if (!workEmail || !password) {
-        alert("Please fill in all the fields in Step 3.");
-        return;
-      }
-    }
-
-    if (step < 3) {
-      setStep(step + 1);
-    }
+    if (step < 3) setStep(step + 1);
   };
 
   const handlePrev = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    }
+    if (step > 1) setStep(step - 1);
   };
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <Typography variant="h5" gutterBottom>
-        Employee Form
-      </Typography>
+      <Typography variant="h5" gutterBottom>Employee Form</Typography>
       <LinearProgress variant="determinate" value={(step / 3) * 100} sx={{ mb: 3 }} />
 
       {step === 1 && <Step1 formData={formData} handleInputChange={handleInputChange} />}
@@ -402,25 +345,10 @@ const EmployeeForm = () => {
       {step === 3 && <Step3 formData={formData} handleInputChange={handleInputChange} handleFileChange={handleFileChange} />}
 
       <div className="mt-6 flex justify-between">
-        {step > 1 && (
-          <Button
-            variant="contained"
-            onClick={handlePrev}
-            sx={{ backgroundColor: "red", color: "white" }}
-          >
-            Previous
-          </Button>
-        )}
-        {step < 3 && (
-          <Button
-            variant="contained"
-            onClick={handleNext}
-            sx={{ backgroundColor: "red", color: "white" }}
-          >
-            Next
-          </Button>
-        )}
+        {step > 1 && <Button variant="contained" onClick={handlePrev} sx={{ backgroundColor: "red", color: "white" }}>Previous</Button>}
+        {step < 3 && <Button variant="contained" onClick={handleNext} sx={{ backgroundColor: "red", color: "white" }}>Next</Button>}
         {step === 3 && (
+          loading ? <LinearProgress /> :
           <Button variant="contained" color="success" onClick={handleSubmit}>
             Submit
           </Button>
