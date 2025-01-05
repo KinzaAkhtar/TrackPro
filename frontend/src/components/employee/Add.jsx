@@ -1,130 +1,433 @@
+import React, { useState, useCallback } from "react";
+import { TextField, Button, Grid, Typography, LinearProgress } from "@mui/material";
 import axios from "axios";
-import React from "react";
-import { useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+// Step1 component wrapped with React.memo to prevent unnecessary re-renders
+const Step1 = React.memo(({ formData, handleInputChange }) => (
+  <div>
+    <Typography variant="h6" gutterBottom>Step 1: Personal Information</Typography>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <TextField
+          label="Full Name"
+          variant="outlined"
+          name="fullname"
+          fullWidth
+          required
+          value={formData.personalInfo.fullName}
+          onChange={(e) =>
+            handleInputChange("personalInfo", "fullName", e.target.value)
+          }
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="Date of Birth"
+          type="date"
+          variant="outlined"
+          name="dob"
+          fullWidth
+          required
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={formData.personalInfo.dob}
+          onChange={(e) =>
+            handleInputChange("personalInfo", "dob", e.target.value)
+          }
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="Gender"
+          variant="outlined"
+          name="gender"
+          fullWidth
+          select
+          required
+          value={formData.personalInfo.gender}
+          onChange={(e) =>
+            handleInputChange("personalInfo", "gender", e.target.value)
+          }
+          SelectProps={{
+            native: true,
+          }}
+        >
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </TextField>
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="Phone Number"
+          variant="outlined"
+          name="phoneno"
+          fullWidth
+          required
+          value={formData.personalInfo.phone}
+          onChange={(e) =>
+            handleInputChange("personalInfo", "phone", e.target.value)
+          }
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="Email"
+          variant="outlined"
+          name="email"
+          fullWidth
+          required
+          value={formData.personalInfo.email}
+          onChange={(e) =>
+            handleInputChange("personalInfo", "email", e.target.value)
+          }
+        />
+      </Grid>
+    </Grid>
+  </div>
+));
 
-const Add = () => {
-    const [formData, setFormData] = useState({})
-    const Navigate = useNavigate()
-    const handleChange = (e) => {
-        const { name, value, files } = e.target
-        if (name === "image") {
-            setFormData((prevData) => ({ ...prevData, [name]: files[0] }))
+// Step2 component wrapped with React.memo to prevent unnecessary re-renders
+const Step2 = React.memo(({ formData, handleInputChange }) => (
+  <div>
+    <Typography variant="h6" gutterBottom>Step 2: Employment Details</Typography>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <TextField
+          label="Employee ID"
+          variant="outlined"
+          name="id"
+          fullWidth
+          required
+          value={formData.employmentDetails.employeeID}
+          onChange={(e) =>
+            handleInputChange("employmentDetails", "employeeID", e.target.value)
+          }
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="Date of Joining"
+          type="date"
+          variant="outlined"
+          name="doj"
+          fullWidth
+          required
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={formData.employmentDetails.doj}
+          onChange={(e) =>
+            handleInputChange("personalInfo", "doj", e.target.value)
+          }
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="Department"
+          variant="outlined"
+          name="dept"
+          fullWidth
+          required
+          value={formData.employmentDetails.department}
+          onChange={(e) =>
+            handleInputChange("employmentDetails", "department", e.target.value)
+          }
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="Designation"
+          variant="outlined"
+          name="designation"
+          fullWidth
+          required
+          value={formData.employmentDetails.designation}
+          onChange={(e) =>
+            handleInputChange("employmentDetails", "designation", e.target.value)
+          }
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="Shift Hours"
+          variant="outlined"
+          name="shiftHours"
+          type="number"
+          fullWidth
+          required
+          value={formData.employmentDetails.shiftHours}
+          onChange={(e) =>
+            handleInputChange("employmentDetails", "shiftHours", e.target.value)
+          }
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="Salary"
+          type="number"
+          name="salary"
+          variant="outlined"
+          fullWidth
+          value={formData.compensation.salary}
+          onChange={(e) =>
+            handleInputChange("compensation", "salary", e.target.value)
+          }
+        />
+      </Grid>
+    </Grid>
+  </div>
+));
+
+// Step3 component wrapped with React.memo to prevent unnecessary re-renders
+const Step3 = React.memo(({ formData, handleInputChange, handleFileChange }) => (
+  <div>
+    <Typography variant="h6" gutterBottom>Step 3: Portal Login</Typography>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Button variant="outlined" component="label" sx={{ borderColor: 'red', color: 'red' }}>
+          Upload CV
+          <input
+            type="file"
+            name="cv"
+            hidden
+            onChange={(e) =>
+              //handleInputChange("performance", "cv", e.target.files[0])
+              handleFileChange("files", "cv", e.target.files[0])
+            }
+          />
+        </Button>
+      </Grid>
+      <Grid item xs={12}>
+        <Button variant="outlined" component="label" sx={{ borderColor: 'red', color: 'red' }}>
+          Upload Photo
+          <input
+            type="file"
+            name="dp"
+            hidden
+            onChange={(e) =>
+              //handleInputChange("performance", "dp", e.target.files[0])
+              handleFileChange("files", "dp", e.target.files[0])
+            }
+          />
+        </Button>
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="Work Email"
+          variant="outlined"
+          name="workemail"
+          fullWidth
+          required
+          value={formData.portalLogin.workEmail}
+          onChange={(e) =>
+            handleInputChange("portalLogin", "workEmail", e.target.value)
+          }
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="Password"
+          name="password"
+          variant="outlined"
+          type="password"
+          fullWidth
+          required
+          value={formData.portalLogin.password}
+          onChange={(e) =>
+            handleInputChange("portalLogin", "password", e.target.value)
+          }
+        />
+      </Grid>
+    </Grid>
+  </div>
+));
+
+const EmployeeForm = () => {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    personalInfo: {
+      fullName: "",
+      dob: "",
+      gender: "",
+      phone: "",
+      email: "",
+    },
+    employmentDetails: {
+      employeeID: "",
+      department: "",
+      designation: "",
+    },
+    portalLogin: {
+      workEmail: "",
+      password: "",
+    },
+    compensation: {
+      salary: "",
+    },
+    files: {
+      cv: null,
+      photo: null,
+    },
+  });
+
+  // Handle input changes with useCallback to prevent unnecessary re-renders
+  const handleInputChange = useCallback((section, field, value) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [section]: {
+        ...prevData[section],
+        [field]: value,
+      },
+    }));
+  }, []);
+
+  // Handle file input change
+  const handleFileChange = (section, field, file) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      files: {
+        ...prevData.files,
+        [field]: file,
+      },
+    }));
+  };
+
+
+  // Handle form submission (step 3 - Submit the data)
+  const handleSubmit = async () => {
+    // Validate before submission
+    if (step === 3) {
+      const { fullName, dob, gender, phone, email } = formData.personalInfo;
+      const { employeeID, department, designation } = formData.employmentDetails;
+      const { workEmail, password } = formData.portalLogin;
+
+      if (!fullName || !dob || !gender || !phone || !email || !employeeID || !department || !designation || !workEmail || !password) {
+        alert("Please fill in all the fields.");
+        return;
+      }
+
+      // Prepare data for submission
+      const submissionData = new FormData();
+
+      // Append personal info
+      Object.keys(formData.personalInfo).forEach(key => {
+        submissionData.append(`personalInfo[${key}]`, formData.personalInfo[key]);
+      });
+
+      // Append employment details
+      Object.keys(formData.employmentDetails).forEach(key => {
+        submissionData.append(`employmentDetails[${key}]`, formData.employmentDetails[key]);
+      });
+
+      // Append portal login details
+      Object.keys(formData.portalLogin).forEach(key => {
+        submissionData.append(`portalLogin[${key}]`, formData.portalLogin[key]);
+      });
+
+      // Append compensation details
+      submissionData.append("compensation[salary]", formData.compensation.salary);
+
+      // Append files (cv and photo)
+      submissionData.append("files[cv]", formData.files.cv);
+      submissionData.append("files[photo]", formData.files.photo);
+
+      // Send the data to the API
+      try {
+        const response = await axios.post('/api/v1/admin/addemployee', submissionData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            // Optionally include Authorization header if needed
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (response.data.success) {
+          alert("Form submitted successfully!");
+          Navigate("/admin-dashboard/employee");
         } else {
-            setFormData((prevData) => ({ ...prevData, [name]: value }))
+          alert("Something went wrong, please try again.");
         }
+      } catch (error) {
+        console.error(error);
+        alert("There was an error submitting the form.");
+      }
     }
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        const formDataObj = new FormData()
-        Object.keys(formData).forEach((key) => {
-            formDataObj.append(key, formData[key])
-        })
-        try {
-            const response = await axios.post('/api/v1/user/register', formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    },
-                }
-            );
-            if (response.data.success) {
-                Navigate("/admin-dashboard/employee");
-            }
-        } catch (error) {
-            if (error.response && !error.response.data.success) {
-                alert(error.response.data.error);
-            }
-        }
+  };
+
+  // Handle next step logic with validation
+  const handleNext = () => {
+    if (step === 1) {
+      const { fullName, dob, gender, phone, email } = formData.personalInfo;
+      if (!fullName || !dob || !gender || !phone || !email) {
+        alert("Please fill in all the fields in Step 1.");
+        return;
+      }
+    } else if (step === 2) {
+      const { employeeID, department, designation } = formData.employmentDetails;
+      if (!employeeID || !department || !designation) {
+        alert("Please fill in all the fields in Step 2.");
+        return;
+      }
+    } else if (step === 3) {
+      const { workEmail, password } = formData.portalLogin;
+      if (!workEmail || !password) {
+        alert("Please fill in all the fields in Step 3.");
+        return;
+      }
     }
 
+    if (step < 3) {
+      setStep(step + 1);
+    }
+  };
 
-    return (
-        <div className="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-md shadow-md">
-            <h2 className="text-2xl font-bold mb-6">Add New Employee</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Employee ID</label>
-                        <input type="text" name="ID" onChange={handleChange} placeholder="Insert ID" className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Name</label>
-                        <input type="text" name="name" onChange={handleChange} placeholder="Insert Name" className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="text" name="email" onChange={handleChange} placeholder="Insert Email" className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required />
-                    </div>
-                    {/* <div>
-                        <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
-                        <input type="date" name="DOB" onChange={handleChange} placeholder="Insert DOB" className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Gender</label>
-                        <select name="gender" onChange={handleChange} className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="preferNotToSay">Prefer Not to Say</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Department</label>
-                        <select name="department" onChange={handleChange} className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required>
-                            <option value="it">IT</option>
-                            <option value="dept2">Dept2</option>
-                            <option value="dept3">Dept3</option>
-                            <option value="dept4">Dept4</option>
-                            <option value="dept5">Dept5</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Marital Status</label>
-                        <select name="maritalStatus" onChange={handleChange} className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required>
-                            <option value="male">Single</option>
-                            <option value="female">Married</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Designation</label>
-                        <select name="designation" onChange={handleChange} className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required>
-                            <option value="intern">Internee</option>
-                            <option value="executive">Executive</option>
-                            <option value="manager">Manager</option>
-                            <option value="tl">Team Lead</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Salary</label>
-                        <input type="number" name="salary" onChange={handleChange} placeholder="Insert Salary" className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Password</label>
-                        <input type="password" name="password" onChange={handleChange} placeholder="******" className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Role</label>
-                        <select name="role" onChange={handleChange} className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required>
-                            <option value="admin">Admin</option>
-                            <option value="employee">Employee</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-                        <input type="number" name="phoneNo" onChange={handleChange} placeholder="123456" className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required />
+  const handlePrev = () => {
+    if (step > 1) {
+      setStep(step - 1);
+    }
+  };
 
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Upload Image</label>
-                        <input type="file" name="image" onChange={handleChange} placeholder="Uplaod Image" accept="image/*" className="mt-1 p-2 block w-full border border-gray-300 rounded-md" />
-                    </div> */}
-                    <button type="submit" className="w-full mt-6 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md">
-                        Add Employee
-                    </button>
-                </div>
-            </form>
-        </div>
-    )
-}
-export default Add
+  return (
+    <div className="p-6 max-w-3xl mx-auto">
+      <Typography variant="h5" gutterBottom>
+        Employee Form
+      </Typography>
+      <LinearProgress variant="determinate" value={(step / 3) * 100} sx={{ mb: 3 }} />
+
+      {step === 1 && <Step1 formData={formData} handleInputChange={handleInputChange} />}
+      {step === 2 && <Step2 formData={formData} handleInputChange={handleInputChange} />}
+      {step === 3 && <Step3 formData={formData} handleInputChange={handleInputChange} handleFileChange={handleFileChange} />}
+
+      <div className="mt-6 flex justify-between">
+        {step > 1 && (
+          <Button
+            variant="contained"
+            onClick={handlePrev}
+            sx={{ backgroundColor: "red", color: "white" }}
+          >
+            Previous
+          </Button>
+        )}
+        {step < 3 && (
+          <Button
+            variant="contained"
+            onClick={handleNext}
+            sx={{ backgroundColor: "red", color: "white" }}
+          >
+            Next
+          </Button>
+        )}
+        {step === 3 && (
+          <Button variant="contained" color="success" onClick={handleSubmit}>
+            Submit
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default EmployeeForm;

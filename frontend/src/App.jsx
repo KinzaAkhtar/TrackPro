@@ -11,6 +11,10 @@ import EditEmployee from "./components/employee/EditEmployee"
 import HRDashboard from "./pages/HRDashboard"
 import TLDashboard from "./pages/TLDashboard"
 import Tasks from "./pages/Tasks"
+import ViewEmployee from "./components/employee/ViewEmployee"
+import AttendanceManag from "./components/attendmanage/AttendanceManag"
+import Payroll from "./components/payroll/Payroll"
+import Setting from "./components/Settings/Setting"
 
 
 function App() {
@@ -31,6 +35,10 @@ function App() {
           <Route path="/admin-dashboard/employee" element={<List/>}></Route>
           <Route path="/admin-dashboard/add-employee" element={<Add/>}></Route>
           <Route path="/admin-dashboard/edit-employee/:id" element={<EditEmployee/>}></Route>
+          <Route path="/admin-dashboard/view-employee/:id" element={<ViewEmployee/>}></Route>
+          <Route path="/admin-dashboard/attend-manage" element={<AttendanceManag/>}></Route>
+          <Route path="/admin-dashboard/payroll" element={<Payroll/>}></Route>
+          <Route path="/admin-dashboard/settings" element={<Setting/>}></Route>
         </Route>
         <Route path="/employee-dashboard" element={<EmployeeDashboard/>}>
         <Route path="/employee-dashboard/tasks" element={<Tasks/>}></Route>
