@@ -284,19 +284,19 @@ const EmployeeForm = () => {
     }));
   }, []);
 
-    // Handle file input change
-    const handleFileChange = (section, field, file) => {
-      setFormData((prevData) => ({
-        ...prevData,
-        files: {
-          ...prevData.files,
-          [field]: file,
-        },
-      }));
-    };
+  // Handle file input change
+  const handleFileChange = (section, field, file) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      files: {
+        ...prevData.files,
+        [field]: file,
+      },
+    }));
+  };
 
 
-    // Handle form submission (step 3 - Submit the data)
+  // Handle form submission (step 3 - Submit the data)
   const handleSubmit = async () => {
     // Validate before submission
     if (step === 3) {
@@ -311,7 +311,7 @@ const EmployeeForm = () => {
 
       // Prepare data for submission
       const submissionData = new FormData();
-      
+
       // Append personal info
       Object.keys(formData.personalInfo).forEach(key => {
         submissionData.append(`personalInfo[${key}]`, formData.personalInfo[key]);
@@ -336,7 +336,7 @@ const EmployeeForm = () => {
 
       // Send the data to the API
       try {
-        const response = await axios.post('/api/v1/user/register', submissionData, {
+        const response = await axios.post('/api/v1/admin/addemployee', submissionData, {
           headers: {
             "Content-Type": "multipart/form-data",
             // Optionally include Authorization header if needed
