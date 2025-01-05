@@ -27,11 +27,11 @@ const EmployeeSidebar = () => {
                     <FaHome className="mr-2"/>
                     <span>Dashboard</span>
                 </NavLink>
-                <NavLink to="/employee-dashboard/performance-monitoring" className={({isActive}) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 bock py-2.5 px-4 hover:bg-yellow-600 rounded-lg} `}>
+                <NavLink to="employee-dashboard/performance-monitoring" className={({isActive}) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 bock py-2.5 px-4 hover:bg-yellow-600 rounded-lg} `}>
                     <FaTachometerAlt className="mr-2"/>
                     <span>Performance Monitoring</span>
                 </NavLink>
-                <NavLink to="employee-dashboard/attendance-and-leaves" className="flex items-center space-x-4 bock py-2.5 px-4 hover:bg-yellow-600 rounded-lg">
+                <NavLink to="employee-dashboard/attendance" className="flex items-center space-x-4 bock py-2.5 px-4 hover:bg-yellow-600 rounded-lg">
                     <FaCalendarCheck className="mr-2"/>
                     <span>Attendance and Leaves</span>
                 </NavLink>
@@ -48,8 +48,8 @@ const EmployeeSidebar = () => {
                     <span>Settings</span>
                 </NavLink>
             </div>
-            <div className="sidebar relative">
-            <img src={LogoutLogo} alt="Image 2" className="bottom-0 left-2 h-auto max-w-40" />
+            <div className="sidebar">
+            <img src={LogoutLogo} alt="LogoutLogo" className="bottom-0 left-2 h-auto max-w-40" />
             </div>
             
         </div>

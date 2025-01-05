@@ -8,6 +8,9 @@ import RoleBaseRoutes from "./utils/RoleBaseRoutes"
 import AdminSummary from "./components/dashboard/AdminSummary"
 import Add from "./components/employee/Add"
 import EditEmployee from "./components/employee/EditEmployee"
+import HRDashboard from "./pages/HRDashboard"
+import TLDashboard from "./pages/TLDashboard"
+import Tasks from "./pages/Tasks"
 
 
 function App() {
@@ -29,7 +32,12 @@ function App() {
           <Route path="/admin-dashboard/add-employee" element={<Add/>}></Route>
           <Route path="/admin-dashboard/edit-employee/:id" element={<EditEmployee/>}></Route>
         </Route>
-        <Route path="/employee-dashboard" element={<EmployeeDashboard/>}></Route>
+        <Route path="/employee-dashboard" element={<EmployeeDashboard/>}>
+        <Route path="/employee-dashboard/tasks" element={<Tasks/>}></Route>
+        </Route>
+        <Route path="/hr-dashboard" element={<HRDashboard/>}></Route>
+        <Route path="/tl-dashboard" element={<TLDashboard/>}></Route>
+
       </Routes>
     </BrowserRouter>
   )

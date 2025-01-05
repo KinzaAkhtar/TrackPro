@@ -14,10 +14,10 @@ const HRSidebar = () => {
                 <img src={sidebarLogo} alt="Image 1" className=" w-25 mt-2" />
             </div>
             <div className="bg-white bg-opacity-30 p-4 rounded-lg shadow-lg backdrop-blur-lg max-w-xs mx-auto flex justify-center items-center mt-4">
-                <Avatar name="Hiba Asif" size="40" round={true} />
+                <Avatar name="Kinza Akhtar" size="40" round={true} />
                 <div className="profileContent">
-                    <p className="name ml-4 text-sm">Hiba Asif</p>
-                    <p className="name ml-4 text-sm">hibaasif@gmail.com</p>
+                    <p className="name ml-4 text-sm">Kinza Akhtar</p>
+                    <p className="name ml-4 text-sm">kinza@gmail.com</p>
                 </div>
             </div>
             <div className="mt-8">
@@ -27,7 +27,7 @@ const HRSidebar = () => {
                     <FaHome className="mr-2"/>
                     <span>Dashboard</span>
                 </NavLink>
-                <NavLink to="/hr-dashboard/performance-monitoring" className={({isActive}) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 bock py-2.5 px-4 hover:bg-yellow-600 rounded-lg} `}>
+                <NavLink to="hr-dashboard/performance-monitoring" className={({isActive}) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 bock py-2.5 px-4 hover:bg-yellow-600 rounded-lg} `}>
                     <FaTachometerAlt className="mr-2"/>
                     <span>Performance Monitoring</span>
                 </NavLink>
