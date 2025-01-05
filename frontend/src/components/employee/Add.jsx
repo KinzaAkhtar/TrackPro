@@ -336,7 +336,7 @@ const EmployeeForm = () => {
 
       // Send the data to the API
       try {
-        const response = await axios.post('/api/v1/user/register', submissionData, {
+        const response = await axios.post('/api/v1/admin/addemployee', submissionData, {
           headers: {
             "Content-Type": "multipart/form-data",
             // Optionally include Authorization header if needed

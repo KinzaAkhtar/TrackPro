@@ -47,7 +47,7 @@ const AdminSidebar = () => {
                     <FaTachometerAlt className="mr-2" />
                     <span>Performance Monitoring</span>
                 </NavLink>
-                <NavLink to="admin-dashboard/settings" className="flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg">
+                <NavLink to="/admin-dashboard/settings" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
                     <FaCog className="mr-2" />
                     <span>Settings</span>
                 </NavLink>

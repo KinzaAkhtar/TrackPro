@@ -70,7 +70,7 @@ const AttendanceManagement = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="text-center p-6">
       <h1 className="text-3xl font-bold mb-4">Employees Attendance Management</h1>
 
       {/* Search Bar */}
