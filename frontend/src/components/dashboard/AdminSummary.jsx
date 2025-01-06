@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, Typography, Grid, Box } from "@mui/material";
-import { Doughnut, Line, Bar } from "react-chartjs-2";
+import { Doughnut, Line, Bar, Pie } from "react-chartjs-2";
 import {Chart as ChartJS,CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcElement,PointElement,LineElement,} from "chart.js";
 import List from '../employee/List';
 
@@ -17,6 +17,19 @@ const AdminSummary = () => {
     { title: "Total Tasks", value: 100, bgColor: "bg-blue-500" },
 
   ];
+  const employeeOfTheMonth = "John Doe"; // Best KPI employee
+
+    // Department-wise employee distribution chart data
+    const departmentData = {
+        labels: ["HR", "Engineering", "Marketing", "Sales", "Finance"],
+        datasets: [
+          {
+            data: [30, 40, 10, 15, 5],
+            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+            hoverOffset: 4,
+          },
+        ],
+      };
 
   // KPI values of employees chart data
   const kpiData = {
@@ -46,6 +59,55 @@ const AdminSummary = () => {
     ],
   };
 
+  //salary range data
+  const salaryData = {
+    labels: ["$0 - $50K", "$50K - $100K", "$100K - $150K", "$150K+"], // Salary ranges
+    datasets: [
+      {
+        label: "Number of Employees by Salary Range",
+        data: [10, 25, 8, 7], // Number of employees in each salary range
+        backgroundColor: [
+          "rgba(54, 162, 235, 0.6)", // Color for $0 - $50K range
+          "rgba(75, 192, 192, 0.6)", // Color for $50K - $100K range
+          "rgba(255, 159, 64, 0.6)", // Color for $100K - $150K range
+          "rgba(255, 99, 132, 0.6)", // Color for $150K+ range
+        ],
+        borderColor: [
+          "#36A2EB", "#4BC0C0", "#FF9F40", "#FF6384" // Border colors for each segment
+        ],
+        borderWidth: 1, // Border width
+      },
+    ],
+  };
+
+  const employeeData = {
+    labels: ["Alice", "Bob", "Charlie", "David", "John Doe"], // Employee names
+    datasets: [
+      {
+        label: "Pending Tasks",
+        data: [5, 10, 6, 2, 7], // Pending tasks for each employee
+        backgroundColor: "rgba(255, 99, 132, 0.6)", // Red color for pending tasks
+        borderColor: "#FF6384", // Border color
+        borderWidth: 1, // Border width
+      },
+      {
+        label: "In Progress Tasks",
+        data: [4, 8, 5, 3, 6], // In-progress tasks for each employee
+        backgroundColor: "rgba(54, 162, 235, 0.6)", // Blue color for in-progress tasks
+        borderColor: "#36A2EB", // Border color
+        borderWidth: 1, // Border width
+      },
+      {
+        label: "Done Tasks",
+        data: [3, 7, 4, 3, 7], // Done tasks for each employee
+        backgroundColor: "rgba(25, 109, 9, 0.6)", // Green color for done tasks
+        borderColor: "#4BC0C0", // Border color
+        borderWidth: 1, // Border width
+      },
+    ],
+  };
+   
+
   return (
     //Welcome Banner
     <Box
@@ -58,27 +120,25 @@ const AdminSummary = () => {
     {/* Welcome Card */}
     <Card
         className="mb-6 p-6 bg-gradient-to-r from-red-800 via-orange-900 to-yellow-200 text-white shadow-lg"
-        style={{ background: "linear-gradient(to left, #f44336, #ff9800, #ffeb3b)" }}
-      >
+        style={{ background: "linear-gradient(to left, #f44336, #ff9800, #ffeb3b)" }}>
         <CardContent>
-          <Typography variant="h4" component="div" className="font-bold text-5xl">
+            <Typography variant="h4" component="div" className="font-bold text-5xl">
             System Admin Dashboard
-          </Typography>
-          <Typography variant="h4" component="div" className="font-bold text-5xl mt-2">
+            </Typography>
+            <Typography variant="h4" component="div" className="font-bold text-5xl mt-2">
             TrackPro!
-          </Typography>
-          <Typography variant="body2" component="div" className="font-normal text-lg text-gray-600 mt-4">
+            </Typography>
+            <Typography variant="body2" component="div" className="font-normal text-lg text-gray-600 mt-4">
             Welcome to TrackPro! Employee Performance Monitoring tool.
-          </Typography>
-          <Link
+            </Typography>
+            <Link
             to="/admin-dashboard/add-employee"
-            className="px-4 py-2 bg-red-500 hover:bg-red-700 rounded text-white mt-4 inline-block"
-          >
+            className="px-4 py-2 bg-red-500 hover:bg-red-700 rounded text-white mt-4 inline-block">
             Add New Employee
-          </Link>
+            </Link>
         </CardContent>
-      </Card>
-{/* Dashboard Card */}
+    </Card>
+    {/* Dashboard Card */}
     <div className="flex justify-center gap-4 p-4 pl-8 w-full">
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-7xl">
         {cardData.map((card, index) => (
@@ -92,34 +152,111 @@ const AdminSummary = () => {
         ))}
       </div>
     </div>
-{/* Task Completion and Employees KPI charts */}
-<Grid container spacing={4} style={{ marginTop: "15px" }}>
+    {/* Task Completion and Employees KPI charts */}
+    <Grid container spacing={4} style={{ marginTop: "15px" }}>
         <Grid item xs={12} sm={6} md={6}>
-          <Card className="p-6 shadow-md bg-white h-full" style={{ height: "100%" }}>
-            <CardContent style={{ padding: 0, height: "100%" }}>
-              <Typography variant="h6" component="div" className="font-bold text-lg">
-                Tasks Completed Daily
+            <Card className="p-6 shadow-md bg-white h-full" style={{ height: "100%" }}>
+                <CardContent style={{ padding: 0, height: "100%" }}>
+                    <Typography variant="h6" component="div" className="font-bold text-lg">
+                    Tasks Completed Daily
+                    </Typography>
+                    <Line data={taskCompletionData} />
+                </CardContent>
+            </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={6}>
+            <Card className="p-6 shadow-md bg-white h-full" style={{ height: "100%" }}>
+                <CardContent style={{ padding: 0, height: "100%" }}>
+                    <Typography variant="h6" component="div" className="font-bold text-lg">
+                    Employees KPI
+                    </Typography>
+                    <Bar data={kpiData} />
+                </CardContent>
+            </Card>
+        </Grid>
+    </Grid>
+    {/* Graph: Employees by Department */}
+    <Grid container spacing={4} style={{ marginTop: "15px" }}>
+        <Grid item xs={12} sm={6} md={6}>
+            <Card className="mb-6 p-6 shadow-md bg-white" style={{ height: "400px" }}>
+                <CardContent style={{ padding: 0, height: "100%" }}>
+                    <Typography variant="h6" component="div" className="font-bold text-lg">
+                    Employees by Department
+                    </Typography>
+                    <div style={{ height: "320px" ,display: 'flex', justifyContent: "center" }}> {/* Increased height for graph */}
+                        <Doughnut
+                        data={departmentData}
+                        options={{
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {
+                            legend: {
+                                position: "top",
+                            },
+                            },
+                        }}
+                        />
+                    </div>
+                </CardContent>
+            </Card>   
+        </Grid>
+        {/* Dashboard Card */}
+        <Grid item xs={12} sm={6} md={6}>
+            <Card className="mb-6 p-6 shadow-md bg-white" style={{ height: "400px" }}>
+                <CardContent style={{ padding: 0, height: "100%" }}>
+                    <Typography variant="h6" component="div" className="font-bold text-lg">
+                    Employees by Salary Range
+                    </Typography>
+                    <div style={{ height: "320px" ,display: 'flex', justifyContent: "center" }}>
+                        <Pie data={salaryData} 
+                        options={{
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {
+                            legend: {
+                                position: "top",
+                            },
+                            },
+                        }}
+                        />
+                    </div>
+                </CardContent>
+            </Card>
+        </Grid>
+    </Grid>
+    <Grid container spacing={4} style={{ marginTop: "4px" }}>
+        <Grid item xs={12} sm={6} md={6}>
+            <Card className="p-6 shadow-md bg-white h-full" style={{ height: "100%" }}>
+                <CardContent style={{ padding: 0, height: "100%" }}>
+                    <Typography variant="h6" component="div" className="font-bold text-lg">
+                    Task Completed by Employees
+                    </Typography>
+                    <Bar data={employeeData} />
+                </CardContent>
+            </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={6}>
+          {/* Employee of the Month Card */}
+          <Card className="mb-6 p-6 bg-yellow-300 shadow-lg" style={{ height: "150px" }}>
+            <CardContent style={{ padding: 10, height: "100%" }}>
+              <Typography variant="h5" component="div" className="font-semibold">
+                Employee of the Month: {employeeOfTheMonth}
               </Typography>
-              <Line data={taskCompletionData} />
+            </CardContent>
+          </Card>
+          <Card className="mb-6 p-6 bg-yellow-300 shadow-lg" style={{ height: "150px" }}>
+            <CardContent style={{ padding: 0, height: "100%" }}>
+              <Typography variant="h5" component="div" className="font-semibold">
+                Employee of the Month: {employeeOfTheMonth}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={6}>
-          <Card className="p-6 shadow-md bg-white h-full" style={{ height: "100%" }}>
-            <CardContent style={{ padding: 0, height: "100%" }}>
-              <Typography variant="h6" component="div" className="font-bold text-lg">
-                Employees KPI
-              </Typography>
-              <Bar data={kpiData} />
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
         
-    
-  
+    </Grid>
     </Box>
 );    
 };
 
 export default AdminSummary;
+
