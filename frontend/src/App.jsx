@@ -17,6 +17,7 @@ import Payroll from "./components/payroll/Payroll"
 import Setting from "./components/Settings/Setting"
 
 
+
 function App() {
 
   return (
@@ -42,6 +43,7 @@ function App() {
         </Route>
         <Route path="/employee-dashboard" element={<EmployeeDashboard/>}>
         <Route path="/employee-dashboard/tasks" element={<Tasks/>}></Route>
+        <Route path="/employee-dashboard/settings" element={<Setting/>}></Route>
         </Route>
         <Route path="/hr-dashboard" element={<HRDashboard/>}></Route>
         <Route path="/tl-dashboard" element={<TLDashboard/>}></Route>
