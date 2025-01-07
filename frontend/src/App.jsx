@@ -11,7 +11,8 @@ import Add from "./components/employee/Add"
 import EditEmployee from "./components/employee/EditEmployee"
 import HRDashboard from "./pages/HRDashboard"
 import TLDashboard from "./pages/TLDashboard"
-import Tasks from "./components/tasks/Tasks"
+import Tasks from "./pages/Tasks"
+import TaskTable from "./components/tasks/TaskTable";
 import ViewEmployee from "./components/employee/ViewEmployee"
 import AttendanceManag from "./components/attendmanage/AttendanceManag"
 import Payroll from "./components/payroll/Payroll"
@@ -44,14 +45,13 @@ function App() {
           <Route path="/admin-dashboard/attend-manage" element={<AttendanceManag/>}></Route>
           <Route path="/admin-dashboard/payroll" element={<Payroll/>}></Route>
           <Route path="/admin-dashboard/settings" element={<Setting/>}></Route>
-          <Route path="/admin-dashboard/tasks" element={<Tasks/>}></Route>
         </Route>
         <Route path="/employee-dashboard" element={<EmployeeDashboard/>}>
-        <Route index element={<EmployeeSummary/>}></Route>
-        <Route path="/employee-dashboard/tasks" element={<Tasks/>}></Route>
-        <Route path="/employee-dashboard/settings" element={<Setting/>}></Route>
-        <Route path="/employee-dashboard/payroll" element={<EmployeePayroll/>}></Route>
-        <Route path="/employee-dashboard/attendance-and-leaves" element={<EmployeeAttendance/>}></Route>
+          <Route index element={<EmployeeSummary/>}></Route>
+          <Route path="/employee-dashboard/tasks" element={<Tasks/>}></Route>          
+          <Route path="/employee-dashboard/settings" element={<Setting/>}></Route>
+          <Route path="/employee-dashboard/payroll" element={<EmployeePayroll/>}></Route>
+          <Route path="/employee-dashboard/attendance-and-leaves" element={<EmployeeAttendance/>}></Route>
 
         </Route>
         <Route path="/hr-dashboard" element={<HRDashboard/>}></Route>

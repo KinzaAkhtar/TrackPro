@@ -39,6 +39,10 @@ const AdminSidebar = () => {
                     <FaCalendarCheck className="mr-2" />
                     <span>Attendance Management</span>
                 </NavLink>
+                <NavLink to="/admin-dashboard/tasks" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
+                    <FaCalendarCheck className="mr-2" />
+                    <span>Tasks</span>
+                </NavLink>
                 <NavLink to="/admin-dashboard/payroll" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
                     <FaDollarSign className="mr-2" />
                     <span>Payroll</span>

@@ -1,7 +1,6 @@
 import React from "react";
 import sidebarLogo from '../../assets/sidebarLogo.png';
 import LogoutLogo from '../../assets/LogoutLogoWhite.png';
-import user from '../../assets/user.png';
 import {NavLink, useNavigate} from 'react-router-dom';
 import Avatar from 'react-avatar';
 import {FaCalendar, FaCalendarCheck, FaCog, FaDollarSign, FaHammer, FaHome, FaTachometerAlt, FaTasks, FaUser, FaUserFriends} from 'react-icons/fa'
