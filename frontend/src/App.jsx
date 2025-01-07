@@ -6,11 +6,12 @@ import List from "./components/employee/List"
 import PrivateRoutes from "./utils/PrivateRoutes"
 import RoleBaseRoutes from "./utils/RoleBaseRoutes"
 import AdminSummary from "./components/dashboard/AdminSummary"
+import EmployeeSummary from "./components/dashboard/EmployeeSummary"
 import Add from "./components/employee/Add"
 import EditEmployee from "./components/employee/EditEmployee"
 import HRDashboard from "./pages/HRDashboard"
 import TLDashboard from "./pages/TLDashboard"
-import Tasks from "./pages/Tasks"
+import Tasks from "./components/tasks/Tasks"
 import ViewEmployee from "./components/employee/ViewEmployee"
 import AttendanceManag from "./components/attendmanage/AttendanceManag"
 import Payroll from "./components/payroll/Payroll"
@@ -46,6 +47,7 @@ function App() {
           <Route path="/admin-dashboard/tasks" element={<Tasks/>}></Route>
         </Route>
         <Route path="/employee-dashboard" element={<EmployeeDashboard/>}>
+        <Route index element={<EmployeeSummary/>}></Route>
         <Route path="/employee-dashboard/tasks" element={<Tasks/>}></Route>
         <Route path="/employee-dashboard/settings" element={<Setting/>}></Route>
         <Route path="/employee-dashboard/payroll" element={<EmployeePayroll/>}></Route>

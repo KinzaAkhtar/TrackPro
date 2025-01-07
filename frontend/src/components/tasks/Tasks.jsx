@@ -1,11 +1,11 @@
 // File: src/App.jsx
 import React from "react";
-import TaskCards from "../components/tasks/taskCards";
-import TaskKanban from "../components/tasks/taskKanban";
+// import TaskCards from "./TaskCards";
+// import TaskKanban from "./TaskKanban";
 
-import EmployeeSidebar from "../components/dashboard/employeeSidebar";
+// import EmployeeSidebar from "../components/dashboard/employeeSidebar";
 
-import { Outlet } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
 
 
 const Tasks = () => {
