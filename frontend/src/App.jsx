@@ -18,6 +18,7 @@ import Setting from "./components/Settings/Setting"
 
 
 
+
 function App() {
 
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/admin-dashboard/attend-manage" element={<AttendanceManag/>}></Route>
           <Route path="/admin-dashboard/payroll" element={<Payroll/>}></Route>
           <Route path="/admin-dashboard/settings" element={<Setting/>}></Route>
+          <Route path="/admin-dashboard/tasks" element={<Tasks/>}></Route>
         </Route>
         <Route path="/employee-dashboard" element={<EmployeeDashboard/>}>
         <Route path="/employee-dashboard/tasks" element={<Tasks/>}></Route>
