@@ -32,9 +32,9 @@ const employeeSchema = new Schema(
         checkOutTime: {
             type: Date, // Stores the exact timestamp for check-out
         },
-        shiftHours: {
-            type: Number, // Total worked hours (calculated in hours or minutes)
-        },
+        // shiftHours: {
+        //     type: Number, // Total worked hours (calculated in hours or minutes)
+        // },
         department: {
             type: String,
             required: true,
