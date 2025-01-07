@@ -15,6 +15,8 @@ import ViewEmployee from "./components/employee/ViewEmployee"
 import AttendanceManag from "./components/attendmanage/AttendanceManag"
 import Payroll from "./components/payroll/Payroll"
 import Setting from "./components/Settings/Setting"
+import EmployeePayroll from "./components/payroll/EmployeePayroll"
+import EmployeeAttendance from "./components/attendmanage/EmployeeAttendance"
 
 
 
@@ -46,6 +48,9 @@ function App() {
         <Route path="/employee-dashboard" element={<EmployeeDashboard/>}>
         <Route path="/employee-dashboard/tasks" element={<Tasks/>}></Route>
         <Route path="/employee-dashboard/settings" element={<Setting/>}></Route>
+        <Route path="/employee-dashboard/payroll" element={<EmployeePayroll/>}></Route>
+        <Route path="/employee-dashboard/attendance-and-leaves" element={<EmployeeAttendance/>}></Route>
+
         </Route>
         <Route path="/hr-dashboard" element={<HRDashboard/>}></Route>
         <Route path="/tl-dashboard" element={<TLDashboard/>}></Route>
