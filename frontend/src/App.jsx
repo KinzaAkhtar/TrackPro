@@ -22,6 +22,8 @@ import EmployeePayroll from "./components/payroll/EmployeePayroll";
 import TeamManagement from "./components/teammanagement/TeamManagement";
 import  TLPayroll from "./components/payroll/TLPayroll";
 import EmployeeAttendance from "./components/attendmanage/EmployeeAttendance";
+import AdminTaskList from "./components/tasks/AdminTaskList";
+import CreateTask from "./components/tasks/CreateTask";
 
 function App() { 
 
@@ -40,6 +42,8 @@ function App() {
           <Route path="/admin-dashboard/view-employee/:id" element={<ViewEmployee />} />
           <Route path="/admin-dashboard/attend-manage" element={<AttendanceManag />} />
           <Route path="/admin-dashboard/payroll" element={<Payroll />} />
+          <Route path="/admin-dashboard/tasks" element={<AdminTaskList/>}/>
+          <Route path="/admin-dashboard/create-task" element={<CreateTask/>}/>
           <Route path="/admin-dashboard/settings" element={<Setting />} />
         </Route>
 
