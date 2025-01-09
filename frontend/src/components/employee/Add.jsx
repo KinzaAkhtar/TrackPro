@@ -148,36 +148,36 @@ const Step2 = React.memo(({ formData, handleInputChange, errors }) => (
         />
       </Grid>
       <Grid container spacing={1} marginTop={"5px"}>
-  <Grid item xs={6}>
-    <TextField
-      label="Clock-In"
-      variant="outlined"
-      name="clockin"
-      type="number"
-      fullWidth
-      required
-      value={formData.employmentDetails.clockin}
-      onChange={(e) => handleInputChange("employmentDetails", "clockin", e.target.value)}
-      error={!!errors.clockin}
-      helperText={errors.clockin}
-    />
-  </Grid>
-  
-  <Grid item xs={6}>
-    <TextField
-      label="Clock-Out"
-      variant="outlined"
-      name="clockout"
-      type="number"
-      fullWidth
-      required
-      value={formData.employmentDetails.clockout}
-      onChange={(e) => handleInputChange("employmentDetails", "clockout", e.target.value)}
-      error={!!errors.clockout}
-      helperText={errors.clockout}
-    />
-  </Grid>
-</Grid>
+        <Grid item xs={6}>
+          <TextField
+            label="Clock-In"
+            variant="outlined"
+            name="checkInTime"
+            type="Time"
+            fullWidth
+            required
+            value={formData.employmentDetails.checkInTime}
+            onChange={(e) => handleInputChange("employmentDetails", "checkInTime", e.target.value)}
+            error={!!errors.checkInTime}
+            helperText={errors.checkInTime}
+          />
+        </Grid>
+
+        <Grid item xs={6}>
+          <TextField
+            label="Clock-Out"
+            variant="outlined"
+            name="checkOutTime"
+            type="Time"
+            fullWidth
+            required
+            value={formData.employmentDetails.checkOutTime}
+            onChange={(e) => handleInputChange("employmentDetails", "checkOutTime", e.target.value)}
+            error={!!errors.checkOutTime}
+            helperText={errors.checkOutTime}
+          />
+        </Grid>
+      </Grid>
 
       <Grid item xs={12}>
         <TextField
@@ -342,7 +342,7 @@ const EmployeeForm = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     personalInfo: { fullName: "", dob: "", gender: "", phone: "", email: "" },
-    employmentDetails: { employeeID: "", department: "", designation: "", doj: "", clockin: "" , clockout: ""},
+    employmentDetails: { employeeID: "", department: "", designation: "", doj: "", checkInTime: "", checkOutTime: "" },
     portalLogin: { workEmail: "", password: "" },
     compensation: { salary: "" },
     files: { cv: null, photo: null },
@@ -382,7 +382,7 @@ const EmployeeForm = () => {
   const validate = () => {
     let tempErrors = {};
     const { fullName, dob, gender, phone, email } = formData.personalInfo;
-    const { employeeID, department, doj, designation, clockin, clockout } = formData.employmentDetails;
+    const { employeeID, department, doj, designation, checkInTime, checkOutTime } = formData.employmentDetails;
     const { workEmail, password } = formData.portalLogin;
     const { salary } = formData.compensation;
 
@@ -399,8 +399,8 @@ const EmployeeForm = () => {
       if (!department) tempErrors.department = "Department is required";
       if (!doj) tempErrors.doj = "Date of joining is required"
       if (!designation) tempErrors.designation = "Designation is required";
-      if (!clockin) tempErrors.clockin = "Clock In Time is required";
-      if (!clockout) tempErrors.clockout = "Clock Out Time is required";
+      if (!checkInTime) tempErrors.checkInTime = "Clock In Time is required";
+      if (!checkOutTime) tempErrors.checkOutTime = "Clock Out Time is required";
       if (!salary) tempErrors.salary = "Salary is required"
     }
 
