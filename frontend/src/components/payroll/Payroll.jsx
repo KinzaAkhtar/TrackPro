@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { jsPDF } from 'jspdf';
+import { TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 const PayrollScreen = () => {
   const [employeeData, setEmployeeData] = useState([]);
@@ -119,59 +120,60 @@ const PayrollScreen = () => {
 
       {/* Search Bar */}
       <div className="mb-4">
-        <input
-          type="text"
-          className="border p-2 rounded w-full"
-          placeholder="Search by Employee Name"
+        <TextField
+          variant="outlined"
+          fullWidth
+          label="Search by Employee Name"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
       {/* Payroll Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full table-auto border-collapse border border-gray-300 mb-8">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="px-4 py-2 border border-gray-300">Employee ID</th>
-              <th className="px-4 py-2 border border-gray-300">Employee Name</th>
-              <th className="px-4 py-2 border border-gray-300">Position</th>
-              <th className="px-4 py-2 border border-gray-300">Gross Salary</th>
-              <th className="px-4 py-2 border border-gray-300">Deductions</th>
-              <th className="px-4 py-2 border border-gray-300">Net Salary</th>
-              <th className="px-4 py-2 border border-gray-300">Payment Date</th>
-              <th className="px-4 py-2 border border-gray-300">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+      <TableContainer component={Paper} className="overflow-x-auto mb-8">
+        <Table aria-label="payroll table">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ backgroundColor: '#f0f0f0' }}>Employee ID</TableCell>
+              <TableCell sx={{ backgroundColor: '#f0f0f0' }}>Employee Name</TableCell>
+              <TableCell sx={{ backgroundColor: '#f0f0f0' }}>Position</TableCell>
+              <TableCell sx={{ backgroundColor: '#f0f0f0' }}>Gross Salary</TableCell>
+              <TableCell sx={{ backgroundColor: '#f0f0f0' }}>Deductions</TableCell>
+              <TableCell sx={{ backgroundColor: '#f0f0f0' }}>Net Salary</TableCell>
+              <TableCell sx={{ backgroundColor: '#f0f0f0' }}>Payment Date</TableCell>
+              <TableCell sx={{ backgroundColor: '#f0f0f0' }}>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {updatedPayrollWithLeave.length > 0 ? (
               updatedPayrollWithLeave.map((employee) => (
-                <tr key={employee.id} className="border-b hover:bg-gray-50">
-                  <td className="px-4 py-2">{employee.employee_id}</td>
-                  <td className="px-4 py-2">{employee.employee_name}</td>
-                  <td className="px-4 py-2">{employee.position}</td>
-                  <td className="px-4 py-2">{employee.gross_salary}</td>
-                  <td className="px-4 py-2">{employee.deductions}</td>
-                  <td className="px-4 py-2">{employee.net_salary}</td>
-                  <td className="px-4 py-2">{employee.payment_date}</td>
-                  <td className="px-4 py-2">
-                    <button
-                      className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
-                      onClick={() => generatePaySlip(employee)}
-                    >
-                      Generate Pay Slip
-                    </button>
-                  </td>
-                </tr>
+                <TableRow key={employee.id}>
+                  <TableCell>{employee.employee_id}</TableCell>
+                  <TableCell>{employee.employee_name}</TableCell>
+                  <TableCell>{employee.position}</TableCell>
+                  <TableCell>{employee.gross_salary}</TableCell>
+                  <TableCell>{employee.deductions}</TableCell>
+                  <TableCell>{employee.net_salary}</TableCell>
+                  <TableCell>{employee.payment_date}</TableCell>
+                  <TableCell>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: 'rgb(239, 68, 68)', '&:hover': { backgroundColor: 'rgb(220, 50, 50)' } }}
+                    onClick={() => generatePaySlip(employee)}
+                  >
+                    Generate Pay Slip
+                  </Button>
+                  </TableCell>
+                </TableRow>
               ))
             ) : (
-              <tr>
-                <td colSpan="8" className="px-4 py-2 text-center">No payroll records found.</td>
-              </tr>
+              <TableRow>
+                <TableCell colSpan="8" className="text-center">No payroll records found.</TableCell>
+              </TableRow>
             )}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };
