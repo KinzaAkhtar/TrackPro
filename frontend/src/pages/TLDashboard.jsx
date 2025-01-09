@@ -3,6 +3,7 @@ import TLSidebar from "../components/dashboard/TLSidebar";
 import Navbar from "../components/dashboard/Navbar";
 // import AdminSummary from "../components/dashboard/AdminSummary";
 import { Outlet } from "react-router-dom";
+// import EmployeeSidebar from "../components/dashboard/employeeSidebar";
 const TLDashboard = () => {
     return(
         <div className="flex">
