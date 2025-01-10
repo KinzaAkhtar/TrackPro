@@ -5,23 +5,29 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns'; // To format the date for display
 import { useNavigate } from "react-router-dom";
+import { WebStories } from '@mui/icons-material';
 
 
 
 // Dummy Data for Departments and Team Leads
-const departments = ['HR', 'Engineering', 'Marketing'];
-const teamLeads = {
-  HR: ['Alice', 'Bob'],
-  Engineering: ['Charlie', 'David'],
-  Marketing: ['Eva', 'Frank'],
+const departments = ['EBook', 'Marketing', 'ContentWriting', 'WebDevelopment', 'Design', 'Publication', 'Outsourcing', 'Video'];
+const TaskType= {
+  EBook: ['Editing/ProofReading', 'Ghost Writing'],
+  Marketing: ['Post', 'SEO', 'SMM Calendar'],
+  ContentWriting: ['SMM content','Articles','Press release','Blog','Web content'],
+  WebDevelopment: ['Website', 'Web Application', 'Mobile Application' ],
+  Design: ['Illustrations', 'Cover' , 'formatting' , 'SMP'],
+  Publication: ['Book Publication', 'Article Publication'],
+  Outsourcing: ['Domain hosting SSL','Printing','Copyright/Isbn','Cameo video','Magzine article','Audio book','translation'],
+  Video: ['Book Trailer', 'Video Trailer', 'Video Book Animation'],
 };
 
 const TaskForm = () => {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('');
-  const [selectedTeamLead, setSelectedTeamLead] = useState('');
-  const [selectedLabel, setSelectedLabel] = useState('');
+  const [selectedTaskType, setSelectedTaskType] = useState('');
+  const [selectedPriority, setSelectedPriority] = useState('');
   const [deadline, setDeadline] = useState(null);
   const [attachment, setAttachment] = useState(null);
   const [errors, setErrors] = useState({});
@@ -39,7 +45,7 @@ const TaskForm = () => {
   };
 
   // Memoized team lead options based on selected department
-  const teamLeadOptions = useMemo(() => teamLeads[selectedDepartment] || [], [selectedDepartment]);
+  const taskTypeOptions = useMemo(() => TaskType[selectedDepartment] || [], [selectedDepartment]);
 
   // Validation function to check if the required fields are filled
   const validateForm = () => {
@@ -47,7 +53,8 @@ const TaskForm = () => {
     if (!taskTitle) newErrors.taskTitle = 'Task Title is required';
     if (!taskDescription) newErrors.taskDescription = 'Task Description is required';
     if (!selectedDepartment) newErrors.selectedDepartment = 'Department is required';
-    if (!selectedTeamLead) newErrors.selectedTeamLead = 'Team Lead is required';
+    if (!selectedTaskType) newErrors.selectedTaskType = 'Task Type is required';
+    if (!selectedPriority) newErrors.selectedPriority = 'Priority is required';
     return newErrors;
   };
 
@@ -64,9 +71,9 @@ const TaskForm = () => {
     formData.append('taskTitle', taskTitle);
     formData.append('taskDescription', taskDescription);
     formData.append('selectedDepartment', selectedDepartment);
-    formData.append('selectedTeamLead', selectedTeamLead);
-    formData.append('selectedLabel', selectedLabel);
+    formData.append('selectedTaskType', selectedTaskType);
     formData.append('deadline', deadline);
+    formData.append('priority', selectedPriority);
     if (attachment) formData.append('attachment', attachment);
   
     try {
@@ -108,10 +115,10 @@ const TaskForm = () => {
           setTaskDescription(value);
         } else if (name === 'selectedDepartment') {
           setSelectedDepartment(value);
-        } else if (name === 'selectedTeamLead') {
-          setSelectedTeamLead(value);
-        } else if (name === 'selectedLabel') {
-          setSelectedLabel(value);
+        } else if (name === 'selectedTaskType') {
+          setSelectedTaskType(value);
+        } else if (name === 'selectedPriority') {
+          setSelectedPriority(value);
         }
       
         // Clear errors when the user starts typing in the respective field
@@ -167,7 +174,7 @@ const TaskForm = () => {
         {/* Third row: Department and Team Lead (adjacent) */}
         <div className="grid grid-cols-2 gap-6 mb-6 mt-6">
           <FormControl fullWidth>
-            <InputLabel>Assignee Department</InputLabel>
+            <InputLabel>Department</InputLabel>
             <Select
               label="Department"
               name="selectedDepartment"
@@ -185,38 +192,38 @@ const TaskForm = () => {
           </FormControl>
 
           <FormControl fullWidth>
-            <InputLabel>Assignee Team Lead</InputLabel>
+            <InputLabel>Task Type</InputLabel>
             <Select
-              label="Team Lead"
-              name="selectedTeamLead"
-              value={selectedTeamLead}
+              label="Task Type"
+              name="selectedTaskType"
+              value={selectedTaskType}
               onChange={handleInputChange}
               disabled={!selectedDepartment}
-              error={!!errors.selectedTeamLead}
+              error={!!errors.selectedTaskType}
             >
-              {teamLeadOptions.map((lead) => (
-                <MenuItem key={lead} value={lead}>
-                  {lead}
+              {taskTypeOptions.map((tasktype) => (
+                <MenuItem key={tasktype} value={tasktype}>
+                  {tasktype}
                 </MenuItem>
               ))}
             </Select>
-            {errors.selectedTeamLead && <p className="text-red-500 text-sm">{errors.selectedTeamLead}</p>}
+            {errors.selectedTaskType && <p className="text-red-500 text-sm">{errors.selectedTaskType}</p>}
           </FormControl>
         </div>
 
         {/* Fourth row: Label and Deadline (adjacent) */}
         <div className="grid grid-cols-2 gap-6 mb-6">
           <FormControl fullWidth>
-            <InputLabel>Label</InputLabel>
+            <InputLabel>Priority</InputLabel>
             <Select
-              label="Label"
-              name="selectedLabel"
-              value={selectedLabel}
+              label="Priority"
+              name="selectedPriority"
+              value={selectedPriority}
               onChange={handleInputChange}
             >
-              <MenuItem value="pending">Pending</MenuItem>
-              <MenuItem value="urgent">Urgent</MenuItem>
-              <MenuItem value="blocked">Blocked</MenuItem>
+              <MenuItem value="lowPriority">Low Priority</MenuItem>
+              <MenuItem value="mediumPriority">Medium Priority</MenuItem>
+              <MenuItem value="highPriority">High Priority</MenuItem>
             </Select>
           </FormControl>
 

@@ -1,10 +1,22 @@
 import React, { useState, useCallback } from "react";
-import { TextField, Button, Grid, Typography, LinearProgress, Snackbar, Alert } from "@mui/material";
+import { TextField, Button, Grid, Typography, LinearProgress, Snackbar, Alert, MenuItem } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import { Clear } from "@mui/icons-material";
 
+const departments = [
+  "Ebook",
+  "Marketing",
+  "Content Writing",
+  "Web Development",
+  "Design",
+  "Publication",
+  "Outsourcing",
+  "Video"
+];
+
+const gender =["Male", "Female", "Prefer Not to Say"]
 // Step1 component wrapped with React.memo to prevent unnecessary re-renders
 const Step1 = React.memo(({ formData, handleInputChange, errors }) => (
   <div>
@@ -46,16 +58,16 @@ const Step1 = React.memo(({ formData, handleInputChange, errors }) => (
           fullWidth
           select
           required
-          value={formData.personalInfo.gender}
+          value={formData.personalInfo.gender || ""}
           onChange={(e) => handleInputChange("personalInfo", "gender", e.target.value)}
-          SelectProps={{ native: true }}
           error={!!errors.gender}
           helperText={errors.gender}
         >
-          <option value="">Select Gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
+          {gender.map((gender) =>(
+            <MenuItem key={gender} value={gender}>
+              {gender}
+            </MenuItem>
+          ))}
         </TextField>
       </Grid>
       <Grid item xs={12}>
@@ -122,18 +134,25 @@ const Step2 = React.memo(({ formData, handleInputChange, errors }) => (
         />
       </Grid>
       <Grid item xs={12}>
-        <TextField
-          label="Department"
-          variant="outlined"
-          name="dept"
-          fullWidth
-          required
-          value={formData.employmentDetails.department}
-          onChange={(e) => handleInputChange("employmentDetails", "department", e.target.value)}
-          error={!!errors.department}
-          helperText={errors.department}
-        />
-      </Grid>
+          <TextField
+            label="Department"
+            variant="outlined"
+            name="dept"
+            fullWidth
+            required
+            select
+            value={formData.employmentDetails.department || ""}  // Ensure department value is an empty string if not selected
+            onChange={(e) => handleInputChange("employmentDetails", "department", e.target.value)}
+            error={!!errors.department}
+            helperText={errors.department}
+          >
+            {departments.map((department) => (
+                <MenuItem key={department} value={department}>
+                  {department}
+                </MenuItem>
+              ))}
+          </TextField>
+        </Grid>
       <Grid item xs={12}>
         <TextField
           label="Designation"
