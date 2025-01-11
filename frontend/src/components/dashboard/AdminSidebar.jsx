@@ -3,7 +3,7 @@ import sidebarLogo from '../../assets/sidebarLogo.png';
 import LogoutLogo from '../../assets/LogoutLogoWhite.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Avatar from 'react-avatar';
-import { FaCalendarCheck, FaDollarSign, FaHome, FaUserFriends, FaTachometerAlt, FaCog } from 'react-icons/fa';
+import { FaCalendarCheck, FaDollarSign, FaHome, FaUserFriends, FaTachometerAlt, FaCog, FaTasks } from 'react-icons/fa';
 
 const AdminSidebar = () => {
     const navigate = useNavigate(); // Hook to navigate to the login page
@@ -42,6 +42,10 @@ const AdminSidebar = () => {
                 <NavLink to="/admin-dashboard/payroll" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
                     <FaDollarSign className="mr-2" />
                     <span>Payroll</span>
+                </NavLink>
+                <NavLink to="/admin-dashboard/tasks" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
+                    <FaTasks className="mr-2"/>
+                    <span>Task Management</span>
                 </NavLink>
                 <NavLink to="admin-dashboard/performance" className="flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg">
                     <FaTachometerAlt className="mr-2" />
