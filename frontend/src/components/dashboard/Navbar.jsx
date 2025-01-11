@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
+import { NavLink, useNavigate } from 'react-router-dom';
 import InputBase from "@mui/material/InputBase";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -55,17 +56,24 @@ const Navbar = () => {
           horizontal: "right",
         }}
       >
+        
         <MenuItem onClick={handleMenuClose}>
-          <AccountCircleIcon sx={{ mr: 1 }} />
+          <PersonOutlinedIcon sx={{ mr: 1 }} />
           <Typography>My Profile</Typography>
+          
         </MenuItem>
+
         <MenuItem onClick={handleMenuClose}>
           <SettingsOutlinedIcon sx={{ mr: 1 }} />
           <Typography>Settings</Typography>
+          
         </MenuItem>
         <MenuItem onClick={handleMenuClose}>
+        <NavLink to="/login" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-left  rounded-lg`} end>
+
           <LogoutIcon sx={{ mr: 1 }} />
           <Typography>Logout</Typography>
+          </NavLink>
         </MenuItem>
       </Menu>
     </Box>

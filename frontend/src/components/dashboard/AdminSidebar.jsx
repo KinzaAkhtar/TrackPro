@@ -11,7 +11,7 @@ const AdminSidebar = () => {
     // Function to handle logout and redirect to login
     const handleLogout = () => {
         // You can add any logout logic here (e.g., clear local storage, etc.)
-        navigate('/login'); // Redirect to the login page
+        navigate('/login'); // Redirect to the login page 
     };
 
     return (
@@ -39,18 +39,19 @@ const AdminSidebar = () => {
                     <FaCalendarCheck className="mr-2" />
                     <span>Attendance Management</span>
                 </NavLink>
-                <NavLink to="/admin-dashboard/tasks" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
-                    <FaCalendarCheck className="mr-2" />
-                    <span>Tasks</span>
-                </NavLink>
                 <NavLink to="/admin-dashboard/payroll" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
                     <FaDollarSign className="mr-2" />
                     <span>Payroll</span>
                 </NavLink>
-                <NavLink to="/admin-dashboard/settings" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
+                <NavLink to="admin-dashboard/performance" className="flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg">
+                    <FaTachometerAlt className="mr-2" />
+                    <span>Performance Monitoring</span>
+                </NavLink>
+                <NavLink to="admin-dashboard/settings" className="flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg">
                     <FaCog className="mr-2" />
                     <span>Settings</span>
                 </NavLink>
+                
             </div>
             <div className="absolute bottom-4 left-4">
                 <img src={LogoutLogo} alt="Logout" className="h-auto max-w-40" />

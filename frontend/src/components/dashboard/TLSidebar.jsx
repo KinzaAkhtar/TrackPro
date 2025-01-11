@@ -54,6 +54,7 @@ const TLSidebar = () => {
                     <FaCog className="mr-2"/>
                     <span>Settings</span>
                 </NavLink>
+                
             </div>
             <div className="absolute bottom-4 left-4">
                 <img src={LogoutLogo} alt="Logout" className="h-auto max-w-40" />

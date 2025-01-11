@@ -1,7 +1,7 @@
 import React from "react";
 import EmployeeSidebar from "../components/dashboard/employeeSidebar";
 import Navbar from "../components/dashboard/Navbar";
-import AdminSummary from "../components/dashboard/AdminSummary";
+// import AdminSummary from "../components/dashboard/AdminSummary";
 import { Outlet } from "react-router-dom";
 const EmployeeDashboard = () => {
     return(
