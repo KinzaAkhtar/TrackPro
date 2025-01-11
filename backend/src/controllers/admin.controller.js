@@ -21,6 +21,7 @@ const AddEmployee = asyncHandler(async (req, res) => {
         !personalInfo?.fullName ||
         !personalInfo?.dob ||
         !personalInfo?.gender ||
+        !personalInfo?.phone ||
         !personalInfo?.email ||
         !employmentDetails?.employeeID ||
         !employmentDetails?.department ||
@@ -68,6 +69,8 @@ const AddEmployee = asyncHandler(async (req, res) => {
         date_of_birth: personalInfo?.dob,
         gender: personalInfo?.gender,
         email: personalInfo?.email,
+        phoneno: personalInfo?.phone,
+        ID: employmentDetails?.employeeID,
         date_of_joining: employmentDetails?.doj,
         department: employmentDetails?.department,
         designation: employmentDetails?.designation,

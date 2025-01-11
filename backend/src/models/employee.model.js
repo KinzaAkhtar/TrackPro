@@ -8,10 +8,20 @@ const employeeSchema = new Schema(
             type: String,
             required: true,
             trim: true,
+        },
+        ID: {
+            type: String,
+            required: true,
+            trim: true,
             index: true,
+            unique: true
         },
         date_of_birth: {
             type: Date,
+            required: true,
+        },
+        phoneno: {
+            type: Number,
             required: true,
         },
         email: {
