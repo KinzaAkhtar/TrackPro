@@ -8,22 +8,24 @@ import List from "./components/employee/List";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import RoleBaseRoutes from "./utils/RoleBaseRoutes";
 import AdminSummary from "./components/dashboard/AdminSummary";
+import Tasks from "./pages/Tasks";
 import EmployeeSummary from "./components/dashboard/EmployeeSummary";
 import Add from "./components/employee/Add";
 import EditEmployee from "./components/employee/EditEmployee";
 import TLDashboard from "./pages/TLDashboard";
-import Tasks from "./pages/Tasks";
+import EmployeeTasks from "./pages/EmployeeTasks";
 import ViewEmployee from "./components/employee/ViewEmployee";
 import AttendanceManag from "./components/attendmanage/AttendanceManag";
 import Payroll from "./components/payroll/Payroll";
 import Setting from "./components/Settings/Setting";
 import EmployeePayroll from "./components/payroll/EmployeePayroll";
+import TLSummary from "./components/dashboard/TLSummary"
 import EmployeeAttendance from "./components/attendmanage/EmployeeAttendance";
 import AdminTaskList from "./components/tasks/AdminTaskList";
 import CreateTask from "./components/tasks/CreateTask";
-import AdminViewTask from "./components/tasks/AdminViewTask"
 import TLPerformance from "./components/dashboard/TLPerformance"
-import TLSummary from "./components/dashboard/TLSummary"
+import AdminViewTask from "./components/tasks/AdminViewTask"
+
 function App() { 
 
   return (
@@ -50,7 +52,7 @@ function App() {
             {/* Employee Dashboard */}
             <Route path="/employee-dashboard" element={<EmployeeDashboard />}>
               <Route index element={<EmployeeSummary />} />
-              <Route path="/employee-dashboard/tasks" element={<Tasks />} />
+              <Route path="/employee-dashboard/tasks" element={<EmployeeTasks />} />
               <Route path="/employee-dashboard/settings" element={<Setting />} />
               <Route path="/employee-dashboard/payroll" element={<EmployeePayroll />} />
               <Route path="/employee-dashboard/attendance-and-leaves" element={<EmployeeAttendance />} />
@@ -60,11 +62,11 @@ function App() {
             {/* TeamLead Dashboard */}
             <Route path="/tl-dashboard" element={<TLDashboard />}>
               <Route index element={<TLSummary />} />
-              <Route path="/tl-dashboard/tasks" element={<Tasks />} />
+              <Route path="/tl-dashboard/tasks" element={<Tasks/>} />
               <Route path="/tl-dashboard/settings" element={<Setting />} />
               <Route path="/tl-dashboard/payroll" element={<EmployeePayroll />} />
               <Route path="/tl-dashboard/attendance-and-leaves" element={<EmployeeAttendance />} />
-              <Route path="/tl-dashboard/performance-monitoring" element={<TLPerformance />} />
+              <Route path="/tl-dashboard/performance-monitoring" element={<TLPerformance />} />
             </Route>
       </Routes>
     </BrowserRouter>
