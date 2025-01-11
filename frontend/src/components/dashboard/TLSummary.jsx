@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Card, CardContent, Typography, Grid, Box } from "@mui/material";
+import { Card, Button, Snackbar, CardContent, Typography, Grid, Box } from "@mui/material";
 import { Doughnut, Line, Bar, Pie } from "react-chartjs-2";
 import {Chart as ChartJS,CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcElement,PointElement,LineElement,} from "chart.js";
 
@@ -16,14 +16,42 @@ const TLSummary = () => {
     { title: "Present Team Members", value: 45, bgColor: "bg-yellow-500/70" },
   ];
 
+  const [checkedIn, setCheckedIn] = useState(false); // Track check-in status
+  const [checkInTime, setCheckInTime] = useState(""); // Store check-in time
+  const [checkOutTime, setCheckOutTime] = useState(""); // Store check-out time
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar visibility
+  const [snackbarMessage, setSnackbarMessage] = useState(""); // Snackbar message
+
+  const handleCheckIn = () => {
+    const currentDate = new Date();
+    const formattedTime = currentDate.toLocaleString();
+    setCheckInTime(formattedTime);
+    setCheckedIn(true);
+    setSnackbarMessage(`Checked in at ${formattedTime}`);
+    setSnackbarOpen(true);
+  };
+
+  const handleCheckOut = () => {
+    const currentDate = new Date();
+    const formattedTime = currentDate.toLocaleString();
+    setCheckOutTime(formattedTime);
+    setCheckedIn(false);
+    setSnackbarMessage(`Checked out at ${formattedTime}`);
+    setSnackbarOpen(true);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
 
     // Department-wise employee distribution chart data
-    const departmentData = {
-        labels: ["HR", "Engineering", "Marketing", "Sales", "Finance"],
+    const employeeAttend = {
+        labels: ["Present", "On Leave", "Absent"],
         datasets: [
           {
-            data: [30, 40, 10, 15, 5],
-            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+            data: [30, 4, 7],
+            backgroundColor: ["#008000", "#FFFF00", " #FF0000"],
             hoverOffset: 4,
           },
         ],
@@ -43,24 +71,24 @@ const TLSummary = () => {
     ],
   };
 
-  // Department performance data for the horizontal stacked bar chart
-  const departmentPerformanceData = {
-    labels: ["EBook", "Marketing", "Content Writing", "Web Development", "Design", "Publication", "Outsourcing", "Video"],
+  // task progress data for the horizontal stacked bar chart
+  const taskProgress = {
+    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'], // Timeline (X-axis)
     datasets: [
       {
-        label: "Overdue Tasks",
-        data: [3, 5, 2, 4, 1,7,8,9],
-        backgroundColor: "rgba(256, 0, 0, 0.6)",
+        label: 'Assigned Tasks',
+        data: [20, 30, 25, 10], // Data for "Assigned" tasks
+        backgroundColor: '#FFCC00', // Yellow for Assigned tasks
       },
       {
-        label: "In Progress Tasks",
-        data: [10, 15, 7, 9, 6,12,45,67],
-        backgroundColor: "rgba(243, 239, 18, 0.6)",
+        label: 'In Progress Tasks',
+        data: [10, 15, 18, 5], // Data for "In Progress" tasks
+        backgroundColor: '#FFA500', // Orange for In Progress tasks
       },
       {
-        label: "Completed Tasks",
-        data: [17, 20, 5, 2, 2,8,5,6],
-        backgroundColor: "rgba(25, 109, 9, 0.6)",
+        label: 'Completed Tasks',
+        data: [5, 12, 20, 15], // Data for "Completed" tasks
+        backgroundColor: '#008000', // Green for Completed tasks
       },
     ],
   };
@@ -80,11 +108,11 @@ const TLSummary = () => {
   };
 
   //salary range data
-  const salaryData = {
-    labels: ["$0 - $50K", "$50K - $100K", "$100K - $150K", "$150K+"], // Salary ranges
+  const taskType = {
+    labels: ["Illustrations", "Cover", "Fomatting", "SMP"], // Salary ranges
     datasets: [
       {
-        label: "Number of Employees by Salary Range",
+        label: "Task Type",
         data: [10, 25, 8, 7], // Number of employees in each salary range
         backgroundColor: [
           "rgba(54, 162, 235, 0.6)", // Color for $0 - $50K range
@@ -139,21 +167,61 @@ const TLSummary = () => {
       }}
     >
     {/* Welcome Card */}
+    {/* Welcome Card */}
     <Card
         className="mb-6 p-6 bg-gradient-to-r from-red-800 via-orange-900 to-yellow-200 text-white shadow-lg"
         style={{ background: "linear-gradient(to left, #f44336, #ff9800, #ffeb3b)" }}>
         <CardContent>
-            <Typography variant="h4" component="div" className="font-bold text-5xl">
+          <Typography variant="h4" component="div" className="font-bold text-5xl">
             Team Lead Dashboard
-            </Typography>
-            <Typography variant="h4" component="div" className="font-bold text-5xl mt-2">
+          </Typography>
+          <Typography variant="h4" component="div" className="font-bold text-5xl mt-2">
             TrackPro!
-            </Typography>
-            <Typography variant="body2" component="div" className="font-normal text-lg text-gray-600 mt-4">
+          </Typography>
+          <Typography variant="body2" component="div" className="font-normal text-lg text-gray-600 mt-4">
             Welcome to TrackPro! Employee Performance Monitoring tool.
-            </Typography>
+          </Typography>
+          <div className="mt-6">
+  <Box display="flex" gap={2}> {/* Use Box with 'gap' for spacing between buttons */}
+    <Button
+      variant="contained"
+      color="error"
+      onClick={handleCheckIn}
+      disabled={checkedIn}
+    >
+      Check In
+    </Button>
+    <Button
+      variant="contained"
+      color="error"
+      onClick={handleCheckOut}
+      disabled={!checkedIn}
+    >
+      Check Out
+    </Button>
+  </Box>
+</div>
+
         </CardContent>
-    </Card>
+      </Card>
+
+      {/* Snackbar for displaying check-in/check-out message */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+        anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          sx={{
+            backgroundColor: 'rgba(0, 128, 0, 0.7)', // Green with less opacity
+            borderRadius: '5px', // Optional: for rounded corners
+            color: 'white', // Ensure text is white to stand out against green background
+            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', // Optional: to add shadow effect
+          }}
+      />
     {/* Dashboard Card */}
     <div className="flex justify-center gap-4 p-4 pl-8 w-full">
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-7xl">
@@ -197,11 +265,11 @@ const TLSummary = () => {
             <Card className="mb-6 p-6 shadow-md bg-white" style={{ height: "400px" }}>
                 <CardContent style={{ padding: 0, height: "100%" }}>
                     <Typography variant="h6" component="div" className="font-bold text-lg">
-                    Employees by Department
+                    Team Members Availability
                     </Typography>
                     <div style={{ height: "320px" ,display: 'flex', justifyContent: "center" }}> {/* Increased height for graph */}
                         <Doughnut
-                        data={departmentData}
+                        data={employeeAttend}
                         options={{
                             responsive: true,
                             maintainAspectRatio: true,
@@ -221,10 +289,10 @@ const TLSummary = () => {
             <Card className="mb-6 p-6 shadow-md bg-white" style={{ height: "400px" }}>
                 <CardContent style={{ padding: 0, height: "100%" }}>
                     <Typography variant="h6" component="div" className="font-bold text-lg">
-                    Employees by Salary Range
+                    Assigned Task Type
                     </Typography>
                     <div style={{ height: "320px" ,display: 'flex', justifyContent: "center" }}>
-                        <Pie data={salaryData} 
+                        <Pie data={taskType} 
                         options={{
                             responsive: true,
                             maintainAspectRatio: true,
@@ -256,11 +324,11 @@ const TLSummary = () => {
           <Card className="p-6 shadow-md bg-white">
             <CardContent style={{ padding: 0 }}>
               <Typography variant="h6" component="div" className="font-bold text-lg">
-                Department Performance
+                Weekly Task Progress
               </Typography>
               <div style={{ height: "320px", display: "flex" }}>
                 <Bar
-                  data={departmentPerformanceData}
+                  data={taskProgress}
                   options={{
                     responsive: true,
                     maintainAspectRatio: true,

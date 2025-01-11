@@ -11,10 +11,10 @@ ChartJS.register(CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcEl
 
 const AdminSummary = () => {
   const cardData = [
-    { title: "Total Employees", value: 50, bgColor: "bg-red-500" },
-    { title: "Headcount: Male/Female", value: "15/20", bgColor: "bg-yellow-500" },
-    { title: "Present Employees (Today)", value: 45, bgColor: "bg-green-500" },
-    { title: "Total Tasks", value: 100, bgColor: "bg-blue-500" },
+    { title: "Total Employees", value: 50, bgColor: "bg-yellow-500/70"  },
+    { title: "Headcount: Male/Female", value: "15/20",  bgColor: "bg-yellow-500/70"  },
+    { title: "Present Employees (Today)", value: 45,  bgColor: "bg-yellow-500/70"  },
+    { title: "Total Tasks", value: 100,  bgColor: "bg-yellow-500/70"  },
 
   ];
   const employeeOfTheMonth = "John Doe"; // Best KPI employee
