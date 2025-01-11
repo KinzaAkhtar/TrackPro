@@ -4,7 +4,7 @@ import TaskCards from "../components/tasks/TaskCards";
 import TaskKanban from "../components/tasks/TaskKanban";
 import { Outlet } from "react-router-dom";
 
-import EmployeeSidebar from "../components/dashboard/employeeSidebar";
+import TLSidebar from "../components/dashboard/TLSidebar";
 
 import { Navigate } from "react-router-dom";
 
@@ -12,7 +12,7 @@ import { Navigate } from "react-router-dom";
 const Tasks = () => {
   return (
     <div className="flex">
-            <EmployeeSidebar/>
+            <TLSidebar/>
       {/* <header className="bg-gray-800 text-white text-center p-4">
         <h1 className="text-2xl font-bold">Task Management Dashboard</h1>
       </header> */}

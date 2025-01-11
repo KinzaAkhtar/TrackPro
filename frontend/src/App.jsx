@@ -11,7 +11,6 @@ import AdminSummary from "./components/dashboard/AdminSummary";
 import EmployeeSummary from "./components/dashboard/EmployeeSummary";
 import Add from "./components/employee/Add";
 import EditEmployee from "./components/employee/EditEmployee";
-import HRDashboard from "./pages/HRDashboard";
 import TLDashboard from "./pages/TLDashboard";
 import Tasks from "./pages/Tasks";
 import ViewEmployee from "./components/employee/ViewEmployee";
@@ -19,13 +18,12 @@ import AttendanceManag from "./components/attendmanage/AttendanceManag";
 import Payroll from "./components/payroll/Payroll";
 import Setting from "./components/Settings/Setting";
 import EmployeePayroll from "./components/payroll/EmployeePayroll";
-import TeamManagement from "./components/teammanagement/TeamManagement";
-import  TLPayroll from "./components/payroll/TLPayroll";
 import EmployeeAttendance from "./components/attendmanage/EmployeeAttendance";
 import AdminTaskList from "./components/tasks/AdminTaskList";
 import CreateTask from "./components/tasks/CreateTask";
 import AdminViewTask from "./components/tasks/AdminViewTask"
-
+import TLPerformance from "./components/dashboard/TLPerformance"
+import TLSummary from "./components/dashboard/TLSummary"
 function App() { 
 
   return (
@@ -61,11 +59,12 @@ function App() {
 
             {/* TeamLead Dashboard */}
             <Route path="/tl-dashboard" element={<TLDashboard />}>
-              <Route index element={<EmployeeSummary />} />
+              <Route index element={<TLSummary />} />
               <Route path="/tl-dashboard/tasks" element={<Tasks />} />
               <Route path="/tl-dashboard/settings" element={<Setting />} />
               <Route path="/tl-dashboard/payroll" element={<EmployeePayroll />} />
               <Route path="/tl-dashboard/attendance-and-leaves" element={<EmployeeAttendance />} />
+              <Route path="/tl-dashboard/performance-monitoring" element={<TLPerformance />} />
             </Route>
       </Routes>
     </BrowserRouter>

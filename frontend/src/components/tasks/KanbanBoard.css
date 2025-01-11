@@ -140,6 +140,8 @@
 .popup-content {
   display: flex;
   gap: 20px;
+  max-height: 70vh; /* Limit the height of the popup content */
+  overflow-y: auto; /* Enable scrolling if the content overflows */
 }
 
 .left-section {
@@ -150,6 +152,8 @@
 .right-section {
   flex: 1;
   max-width: 50%;
+  max-height: 400px; /* Set a maximum height for the right section */
+  overflow-y: auto;
 }
 
 /* Section Titles */
@@ -226,3 +230,84 @@ textarea {
 .file-list li a:hover {
   text-decoration: underline;
 }
+
+.comments-section {
+  margin-top: 20px;
+}
+
+.comment {
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.comment p {
+  margin: 5px 0;
+}
+
+.comment-files {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.comment-files li {
+  margin-top: 5px;
+}
+
+.comment-file-input {
+  margin-top: 10px;
+}
+
+.comment-input {
+  width: 100%;
+  height: 80px;
+  margin-top: 10px;
+}
+
+.return-button {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.return-button:hover {
+  background-color: #0056b3;
+}
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #ccc;
+}
+
+.popup-header h2 {
+  margin: 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.save-changes-button {
+  background-color: #EF4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.save-changes-button:hover {
+  background-color: #b81515;
+}
+
