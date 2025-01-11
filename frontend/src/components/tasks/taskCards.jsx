@@ -1,8 +1,6 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 const TaskCards = () => {
-  const navigate = useNavigate();
 
   const cardData = [
     { title: "To Do", value: 10, bgColor: "bg-red-500", status: "To Do" },
@@ -11,9 +9,7 @@ const TaskCards = () => {
     { title: "Total Tasks", value: 100, bgColor: "bg-blue-500", status: "All" },
   ];
 
-  const handleCardClick = (status) => {
-    navigate(`/tasks/${status}`);
-  };
+
 
   return (
     <div className="flex justify-center gap-4 p-4 pl-8 w-full">
@@ -21,7 +17,6 @@ const TaskCards = () => {
         {cardData.map((card, index) => (
           <div
             key={index}
-            onClick={() => handleCardClick(card.status)}
             className={`p-10 rounded-lg shadow-lg text-white ${card.bgColor} flex flex-col items-start cursor-pointer`}
           >
             <h2 className="text-xl font-bold text-left">{card.title}</h2>

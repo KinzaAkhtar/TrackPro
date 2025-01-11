@@ -24,6 +24,7 @@ const KanbanBoard = () => {
       status: "To Do",
       labels: ["Urgent"],
       files: ["wireframes.zip", "homepage-sketch.png"],
+      comments: [], // Array to store task comments
     },
     {
       id: 2,
@@ -34,25 +35,16 @@ const KanbanBoard = () => {
       status: "In Progress",
       labels: ["Pending"],
       files: ["api-docs.pdf", "auth-module.js"],
+      comments: [], // Array to store task comments
     },
   ]);
 
   const statuses = ["To Do", "In Progress", "Completed", "Evaluated"];
-  const labels = ["Pending", "Urgent", "Blocked"];
+  const members = ["John", "Doe", "Sammy", "Bryan"];
 
   const [selectedTask, setSelectedTask] = useState(null);
-  const [returnReason, setReturnReason] = useState("");
-  const [isReturningTask, setIsReturningTask] = useState(false);
   const [comment, setComment] = useState("");
-
-  const addLabel = (label) => {
-    const updatedTask = {
-      ...selectedTask,
-      labels: [label], // only allow one label at a time
-    };
-    setTasks(tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)));
-    setSelectedTask(updatedTask);
-  };
+  const [commentFiles, setCommentFiles] = useState([]);
 
   const updateTaskStatus = (status) => {
     const updatedTask = { ...selectedTask, status };
@@ -62,14 +54,39 @@ const KanbanBoard = () => {
 
   const closePopup = () => {
     setSelectedTask(null);
-    setIsReturningTask(false);
-    setReturnReason("");
     setComment("");
+    setCommentFiles([]);
   };
 
-  const sendReturnReason = () => {
-    alert(`Return reason sent: ${returnReason}`);
-    setReturnReason(""); // Reset after sending
+  const addComment = () => {
+    if (comment.trim()) {
+      const newComment = {
+        text: comment,
+        author: "Current User", // Replace with dynamic user
+        timestamp: new Date().toISOString(),
+        files: commentFiles,
+      };
+      
+      const updatedTask = {
+        ...selectedTask,
+        comments: [...selectedTask.comments, newComment],
+      };
+      
+      setTasks(tasks.map((task) => (task.id === selectedTask.id ? updatedTask : task)));
+      setSelectedTask(updatedTask); // Update the selected task to reflect the new comment
+      setComment("");
+      setCommentFiles([]);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    setCommentFiles([...commentFiles, ...Array.from(e.target.files)]);
+  };
+
+  const saveChanges = () => {
+    alert("Changes saved!");
+    // Implement saving functionality (e.g., send data to a server)
+    closePopup(); // Close the modal after saving
   };
 
   return (
@@ -113,6 +130,7 @@ const KanbanBoard = () => {
               <button className="close-button" onClick={closePopup}>
                 ✖
               </button>
+             
             </div>
             <div className="popup-content">
               <div className="left-section">
@@ -130,70 +148,8 @@ const KanbanBoard = () => {
                   ))}
                 </ul>
 
-                <h4>Labels</h4>
-                <select
-                  onChange={(e) => addLabel(e.target.value)}
-                  className="dropdown"
-                  defaultValue=""
-                >
-                  <option value="" disabled>
-                    Add a label
-                  </option>
-                  {labels.map((label) => (
-                    <option key={label} value={label}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-
-                <h4>Return Task</h4>
-                <div className="return-task-section">
-                  <input
-                    type="checkbox"
-                    id="returnTask"
-                    checked={isReturningTask}
-                    onChange={(e) => setIsReturningTask(e.target.checked)}
-                  />
-                  <label htmlFor="returnTask">Check to return task</label>
-                  {isReturningTask && (
-                    <>
-                      <textarea
-                        placeholder="Reason for returning..."
-                        value={returnReason}
-                        onChange={(e) => setReturnReason(e.target.value)}
-                        className="comment-input"
-                      ></textarea>
-                      <button className="return-button" onClick={sendReturnReason}>
-                        Send Reason
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              <div className="right-section">
-                <h4>Assigned By</h4>
-                <p>{selectedTask.assignedBy}</p>
-
                 <h4>Deadline</h4>
                 <p>{selectedTask.deadline}</p>
-
-                <h4>Comments</h4>
-                <textarea
-                  placeholder="Write a comment for the team lead..."
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  className="comment-input"
-                ></textarea>
-                <button
-                  className="return-button"
-                  onClick={() => {
-                    alert("Comment sent to the team lead!");
-                    setComment("");
-                  }}
-                >
-                  Send
-                </button>
 
                 <h4>Status</h4>
                 <select
@@ -207,8 +163,68 @@ const KanbanBoard = () => {
                     </option>
                   ))}
                 </select>
+                <h4>Assigned To</h4>
+                <select
+                  value={selectedTask.assignedTo}
+                  onChange={(e) => {
+                    const updatedTask = { ...selectedTask, assignedTo: e.target.value };
+                    setSelectedTask(updatedTask);
+                    setTasks(tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)));
+                  }}
+                  className="dropdown"
+                >
+                  {members.map((member) => (
+                    <option key={member} value={member}>
+                      {member}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="right-section">
+               
+
+                <h4>Comments</h4>
+                <div className="comments-section">
+                  {selectedTask.comments.map((comment, index) => (
+                    <div key={index} className="comment">
+                      <p><strong>{comment.author}</strong> - {new Date(comment.timestamp).toLocaleString()}</p>
+                      <p>{comment.text}</p>
+                      {comment.files.length > 0 && (
+                        <ul className="comment-files">
+                          {comment.files.map((file, idx) => (
+                            <li key={idx}>
+                              <a href={`#${file.name}`} download>{file.name}</a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <textarea
+                  placeholder="Write a comment for the team lead..."
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  className="comment-input"
+                ></textarea>
+
+                <input
+                  type="file"
+                  multiple
+                  onChange={handleFileChange}
+                  className="comment-file-input"
+                />
+
+                <button className="return-button" onClick={addComment}>
+                  Add Comment
+                </button>
               </div>
             </div>
+              <button className="save-changes-button" onClick={saveChanges}>
+                Save Changes
+              </button>
           </div>
         </div>
       )}

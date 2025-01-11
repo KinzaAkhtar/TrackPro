@@ -1,39 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Card, CardContent, Typography, Grid, Box } from "@mui/material";
+import { Card, Button, Snackbar, CardContent, Typography, Grid, Box } from "@mui/material";
 import { Doughnut, Line, Bar, Pie } from "react-chartjs-2";
 import {Chart as ChartJS,CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcElement,PointElement,LineElement,} from "chart.js";
-import List from '../employee/List';
 
 
 // Registering the required chart.js components
 ChartJS.register(CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcElement,PointElement,LineElement);
 
-const AdminSummary = () => {
+const TLSummary = () => {
   const cardData = [
-    { title: "Total Employees", value: 50, bgColor: "bg-yellow-500/70"  },
-    { title: "Headcount: Male/Female", value: "15/20",  bgColor: "bg-yellow-500/70"  },
-    { title: "Present Employees (Today)", value: 45,  bgColor: "bg-yellow-500/70"  },
-    { title: "Total Tasks", value: 100,  bgColor: "bg-yellow-500/70"  },
-
+    { title: "Team Members", value: 50, bgColor: "bg-yellow-500/70" },
+    { title: "Headcount: Male/Female", value: "15/20", bgColor: "bg-yellow-500/70" },
+    { title: "Total Assigned Tasks", value: 100, bgColor: "bg-yellow-500/70" },
+    { title: "Present Team Members", value: 45, bgColor: "bg-yellow-500/70" },
   ];
-  const employeeOfTheMonth = "John Doe"; // Best KPI employee
-  const departmentOfTheMonth = "Design"; // Best department with more completed task
+
+  const [checkedIn, setCheckedIn] = useState(false); // Track check-in status
+  const [checkInTime, setCheckInTime] = useState(""); // Store check-in time
+  const [checkOutTime, setCheckOutTime] = useState(""); // Store check-out time
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar visibility
+  const [snackbarMessage, setSnackbarMessage] = useState(""); // Snackbar message
+
+  const handleCheckIn = () => {
+    const currentDate = new Date();
+    const formattedTime = currentDate.toLocaleString();
+    setCheckInTime(formattedTime);
+    setCheckedIn(true);
+    setSnackbarMessage(`Checked in at ${formattedTime}`);
+    setSnackbarOpen(true);
+  };
+
+  const handleCheckOut = () => {
+    const currentDate = new Date();
+    const formattedTime = currentDate.toLocaleString();
+    setCheckOutTime(formattedTime);
+    setCheckedIn(false);
+    setSnackbarMessage(`Checked out at ${formattedTime}`);
+    setSnackbarOpen(true);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
 
     // Department-wise employee distribution chart data
-    const departmentData = {
-        labels: ["HR", "Engineering", "Marketing", "Sales", "Finance"],
+    const employeeAttend = {
+        labels: ["Present", "On Leave", "Absent"],
         datasets: [
           {
-            data: [30, 40, 10, 15, 5],
-            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+            data: [30, 4, 7],
+            backgroundColor: ["#008000", "#FFFF00", " #FF0000"],
             hoverOffset: 4,
           },
         ],
       };
 
   // KPI values of employees chart data
-  
   const kpiData = {
     labels: ["Alice", "Bob", "Charlie", "David", "John Doe"],
     datasets: [
@@ -47,24 +71,24 @@ const AdminSummary = () => {
     ],
   };
 
-  // Department performance data for the horizontal stacked bar chart
-  const departmentPerformanceData = {
-    labels: ["EBook", "Marketing", "Content Writing", "Web Development", "Design", "Publication", "Outsourcing", "Video"],
+  // task progress data for the horizontal stacked bar chart
+  const taskProgress = {
+    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'], // Timeline (X-axis)
     datasets: [
       {
-        label: "Overdue Tasks",
-        data: [3, 5, 2, 4, 1,7,8,9],
-        backgroundColor: "rgba(256, 0, 0, 0.6)",
+        label: 'Assigned Tasks',
+        data: [20, 30, 25, 10], // Data for "Assigned" tasks
+        backgroundColor: '#FFCC00', // Yellow for Assigned tasks
       },
       {
-        label: "In Progress Tasks",
-        data: [10, 15, 7, 9, 6,12,45,67],
-        backgroundColor: "rgba(243, 239, 18, 0.6)",
+        label: 'In Progress Tasks',
+        data: [10, 15, 18, 5], // Data for "In Progress" tasks
+        backgroundColor: '#FFA500', // Orange for In Progress tasks
       },
       {
-        label: "Completed Tasks",
-        data: [17, 20, 5, 2, 2,8,5,6],
-        backgroundColor: "rgba(25, 109, 9, 0.6)",
+        label: 'Completed Tasks',
+        data: [5, 12, 20, 15], // Data for "Completed" tasks
+        backgroundColor: '#008000', // Green for Completed tasks
       },
     ],
   };
@@ -84,11 +108,11 @@ const AdminSummary = () => {
   };
 
   //salary range data
-  const salaryData = {
-    labels: ["$0 - $50K", "$50K - $100K", "$100K - $150K", "$150K+"], // Salary ranges
+  const taskType = {
+    labels: ["Illustrations", "Cover", "Fomatting", "SMP"], // Salary ranges
     datasets: [
       {
-        label: "Number of Employees by Salary Range",
+        label: "Task Type",
         data: [10, 25, 8, 7], // Number of employees in each salary range
         backgroundColor: [
           "rgba(54, 162, 235, 0.6)", // Color for $0 - $50K range
@@ -143,26 +167,61 @@ const AdminSummary = () => {
       }}
     >
     {/* Welcome Card */}
+    {/* Welcome Card */}
     <Card
         className="mb-6 p-6 bg-gradient-to-r from-red-800 via-orange-900 to-yellow-200 text-white shadow-lg"
         style={{ background: "linear-gradient(to left, #f44336, #ff9800, #ffeb3b)" }}>
         <CardContent>
-            <Typography variant="h4" component="div" className="font-bold text-5xl">
-            System Admin Dashboard
-            </Typography>
-            <Typography variant="h4" component="div" className="font-bold text-5xl mt-2">
+          <Typography variant="h4" component="div" className="font-bold text-5xl">
+            Team Lead Dashboard
+          </Typography>
+          <Typography variant="h4" component="div" className="font-bold text-5xl mt-2">
             TrackPro!
-            </Typography>
-            <Typography variant="body2" component="div" className="font-normal text-lg text-gray-600 mt-4">
+          </Typography>
+          <Typography variant="body2" component="div" className="font-normal text-lg text-gray-600 mt-4">
             Welcome to TrackPro! Employee Performance Monitoring tool.
-            </Typography>
-            <Link
-            to="/admin-dashboard/add-employee"
-            className="px-4 py-2 bg-red-500 hover:bg-red-700 rounded text-white mt-4 inline-block">
-            Add New Employee
-            </Link>
+          </Typography>
+          <div className="mt-6">
+  <Box display="flex" gap={2}> {/* Use Box with 'gap' for spacing between buttons */}
+    <Button
+      variant="contained"
+      color="error"
+      onClick={handleCheckIn}
+      disabled={checkedIn}
+    >
+      Check In
+    </Button>
+    <Button
+      variant="contained"
+      color="error"
+      onClick={handleCheckOut}
+      disabled={!checkedIn}
+    >
+      Check Out
+    </Button>
+  </Box>
+</div>
+
         </CardContent>
-    </Card>
+      </Card>
+
+      {/* Snackbar for displaying check-in/check-out message */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+        anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          sx={{
+            backgroundColor: 'rgba(0, 128, 0, 0.7)', // Green with less opacity
+            borderRadius: '5px', // Optional: for rounded corners
+            color: 'white', // Ensure text is white to stand out against green background
+            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', // Optional: to add shadow effect
+          }}
+      />
     {/* Dashboard Card */}
     <div className="flex justify-center gap-4 p-4 pl-8 w-full">
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-7xl">
@@ -183,7 +242,7 @@ const AdminSummary = () => {
             <Card className="p-6 shadow-md bg-white h-full" style={{ height: "100%" }}>
                 <CardContent style={{ padding: 0, height: "100%" }}>
                     <Typography variant="h6" component="div" className="font-bold text-lg">
-                    Attendance Score By Employee
+                    Team Members Attendance Score
                     </Typography>
                     <Line data={taskCompletionData} />
                 </CardContent>
@@ -193,7 +252,7 @@ const AdminSummary = () => {
             <Card className="p-6 shadow-md bg-white h-full" style={{ height: "100%" }}>
                 <CardContent style={{ padding: 0, height: "100%" }}>
                     <Typography variant="h6" component="div" className="font-bold text-lg">
-                    Employees KPI
+                    Team Members KPI
                     </Typography>
                     <Bar data={kpiData} />
                 </CardContent>
@@ -206,11 +265,11 @@ const AdminSummary = () => {
             <Card className="mb-6 p-6 shadow-md bg-white" style={{ height: "400px" }}>
                 <CardContent style={{ padding: 0, height: "100%" }}>
                     <Typography variant="h6" component="div" className="font-bold text-lg">
-                    Employees by Department
+                    Team Members Availability
                     </Typography>
                     <div style={{ height: "320px" ,display: 'flex', justifyContent: "center" }}> {/* Increased height for graph */}
                         <Doughnut
-                        data={departmentData}
+                        data={employeeAttend}
                         options={{
                             responsive: true,
                             maintainAspectRatio: true,
@@ -230,10 +289,10 @@ const AdminSummary = () => {
             <Card className="mb-6 p-6 shadow-md bg-white" style={{ height: "400px" }}>
                 <CardContent style={{ padding: 0, height: "100%" }}>
                     <Typography variant="h6" component="div" className="font-bold text-lg">
-                    Employees by Salary Range
+                    Assigned Task Type
                     </Typography>
                     <div style={{ height: "320px" ,display: 'flex', justifyContent: "center" }}>
-                        <Pie data={salaryData} 
+                        <Pie data={taskType} 
                         options={{
                             responsive: true,
                             maintainAspectRatio: true,
@@ -254,41 +313,22 @@ const AdminSummary = () => {
             <Card className="p-6 shadow-md bg-white h-full" style={{ height: "100%" }}>
                 <CardContent style={{ padding: 0, height: "100%" }}>
                     <Typography variant="h6" component="div" className="font-bold text-lg">
-                    Task Completed by Employees
+                    Task Completed by Team Members
                     </Typography>
                     <Bar data={employeeData} />
                 </CardContent>
             </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={6}>
-          {/* Employee of the Month Card */}
-          <Card className="mb-6 p-6 bg-yellow-300 shadow-lg" style={{ height: "150px" }}>
-            <CardContent style={{ padding: 10, height: "100%" }}>
-              <Typography variant="h5" component="div" className="font-semibold">
-                Employee of the Month: {employeeOfTheMonth}
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card className="mb-6 p-6 bg-yellow-300 shadow-lg" style={{ height: "150px" }}>
-            <CardContent style={{ padding: 0, height: "100%" }}>
-              <Typography variant="h5" component="div" className="font-semibold">
-                Department of the Month: {departmentOfTheMonth}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-    </Grid>
     {/* Department Performance Horizontal Stacked Bar Chart */}
-    <Grid container spacing={4} style={{ marginTop: "15px" }}>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6} md={6}>
           <Card className="p-6 shadow-md bg-white">
             <CardContent style={{ padding: 0 }}>
               <Typography variant="h6" component="div" className="font-bold text-lg">
-                Department Performance
+                Weekly Task Progress
               </Typography>
               <div style={{ height: "320px", display: "flex" }}>
                 <Bar
-                  data={departmentPerformanceData}
+                  data={taskProgress}
                   options={{
                     responsive: true,
                     maintainAspectRatio: true,
@@ -312,10 +352,10 @@ const AdminSummary = () => {
             </CardContent>
           </Card>
         </Grid>
-      </Grid>
+    </Grid>
     </Box>
 );    
 };
 
-export default AdminSummary;
+export default TLSummary;
 

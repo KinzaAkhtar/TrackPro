@@ -33,10 +33,6 @@ const EmployeeSidebar = () => {
                     <FaHome className="mr-2"/>
                     <span>Dashboard</span>
                 </NavLink>
-                <NavLink to="/employee-dashboard/performance-monitoring" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
-                    <FaTachometerAlt className="mr-2"/>
-                    <span>Performance Monitoring</span>
-                </NavLink>
                 <NavLink to="/employee-dashboard/attendance-and-leaves" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
                     <FaCalendarCheck className="mr-2"/>
                     <span>Attendance and Leaves</span>
@@ -53,6 +49,7 @@ const EmployeeSidebar = () => {
                     <FaCog className="mr-2"/>
                     <span>Settings</span>
                 </NavLink>
+                
             </div>
             <div className="absolute bottom-4 left-4">
                 <img src={LogoutLogo} alt="Logout" className="h-auto max-w-40" />

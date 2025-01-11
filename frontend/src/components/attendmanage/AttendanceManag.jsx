@@ -41,10 +41,9 @@ const AttendanceManagement = () => {
         leave_type: 'Sick Leave',
         start_date: '2024-12-01',
         end_date: '2024-12-05',
-        reason: 'Medical emergency',
         status: 'Approved',
       },
-      { id: 2, employee_name: 'Jane Smith', leave_type: 'Vacation', start_date: '2024-12-15', end_date: '2024-12-20', reason: 'Holiday', status: 'Pending' },
+      { id: 2, employee_name: 'Jane Smith', leave_type: 'Vacation', start_date: '2024-12-15', end_date: '2024-12-20', status: 'Pending' },
     ];
 
     setAttendanceData(mockAttendanceData);
@@ -137,7 +136,6 @@ const AttendanceManagement = () => {
               <TableCell>Leave Type</TableCell>
               <TableCell>Start Date</TableCell>
               <TableCell>End Date</TableCell>
-              <TableCell>Reason</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
@@ -149,7 +147,6 @@ const AttendanceManagement = () => {
                 <TableCell>{leave.leave_type}</TableCell>
                 <TableCell>{leave.start_date}</TableCell>
                 <TableCell>{leave.end_date}</TableCell>
-                <TableCell>{leave.reason}</TableCell>
                 <TableCell>{leave.status}</TableCell>
                 <TableCell>
                   {leave.status === 'Pending' && (

@@ -104,7 +104,7 @@
 
 .popup {
   background: #ffffff;
-  padding: 30px;
+  padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   max-width: 800px;
@@ -112,6 +112,8 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-height: 80vh;
+  overflow-y: auto; /* Ensures the popup scrolls when the content exceeds the height */
 }
 
 .popup-header {
@@ -137,23 +139,23 @@
   color: #333333;
 }
 
+.file-upload {
+  margin-top: 8px;
+}
+
 .popup-content {
   display: flex;
   gap: 20px;
-  max-height: 70vh; /* Limit the height of the popup content */
-  overflow-y: auto; /* Enable scrolling if the content overflows */
+  max-height: 60vh; /* Content section max height */
+  overflow-y: auto; /* Ensure it scrolls if the content overflows */
 }
 
 .left-section {
-  flex: 1;
-  max-width: 50%;
+  width: 50%;
 }
 
 .right-section {
-  flex: 1;
-  max-width: 50%;
-  max-height: 400px; /* Set a maximum height for the right section */
-  overflow-y: auto;
+  width: 50%;
 }
 
 /* Section Titles */
@@ -183,17 +185,23 @@ textarea {
   margin-top: 10px;
 }
 
-.return-button {
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.return-submit-button {
+  background-color: #0073e6; /* Green background */
+  color: white; /* White text */
+  padding: 10px 20px; /* Add padding for a better size */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Change cursor to pointer */
+  font-size: 14px; /* Adjust font size */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
 }
 
-.return-button:hover {
-  background-color: #0056b3;
+.return-submit-button:hover {
+  background-color: #005bb5; /* Slightly darker green when hovered */
+}
+
+.return-submit-button:active {
+  background-color: #0073e6; /* Darker green on click */
 }
 
 .comment-input {
@@ -202,14 +210,6 @@ textarea {
   border: 1px solid #ddd;
   font-size: 14px;
   margin-top: 10px;
-}
-
-.dropdown {
-  width: 100%;
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  font-size: 14px;
 }
 
 .file-list {
@@ -232,81 +232,102 @@ textarea {
 }
 
 .comments-section {
-  margin-top: 20px;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
 }
 
 .comment {
-  background-color: #f4f4f4;
-  padding: 10px;
-  border-radius: 5px;
   margin-bottom: 10px;
 }
 
-.comment p {
-  margin: 5px 0;
+.comment-text {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
 }
 
-.comment-files {
-  list-style-type: none;
-  padding-left: 0;
+.comment-meta {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
 }
 
-.comment-files li {
-  margin-top: 5px;
-}
-
-.comment-file-input {
+.add-comment {
   margin-top: 10px;
 }
 
 .comment-input {
   width: 100%;
-  height: 80px;
-  margin-top: 10px;
+  height: 60px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
-.return-button {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
+.add-comment-button {
+  margin-top: 5px;
+  padding: 8px 12px;
+  background-color: #0073e6;
+  color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
-.return-button:hover {
-  background-color: #0056b3;
+.add-comment-button:hover {
+  background-color: #005bb5;
 }
-.popup-header {
+
+.dropdown {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.dropdown:focus {
+  border-color: #0073e6;
+  outline: none;
+}
+
+.file-upload-icon {
+  display: inline-block;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.file-upload-icon svg {
+  vertical-align: middle;
+}
+
+.popup-footer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-bottom: 1px solid #ccc;
-}
-
-.popup-header h2 {
-  margin: 0;
-}
-
-.close-button {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
+  justify-content: flex-end;
+  margin-top: 20px;
 }
 
 .save-changes-button {
-  background-color: #EF4444;
-  color: white;
+  padding: 10px 20px;
+  width: 100%;
+  background-color: #b81515;
+  color: #fff;
   border: none;
-  padding: 8px 16px;
+  border-radius: 4px;
   cursor: pointer;
-  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
 .save-changes-button:hover {
+  background-color: #bb3e1e;
+}
+
+.save-changes-button:active {
   background-color: #b81515;
 }
