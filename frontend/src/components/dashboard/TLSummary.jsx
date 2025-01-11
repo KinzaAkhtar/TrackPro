@@ -3,19 +3,17 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, Typography, Grid, Box } from "@mui/material";
 import { Doughnut, Line, Bar, Pie } from "react-chartjs-2";
 import {Chart as ChartJS,CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcElement,PointElement,LineElement,} from "chart.js";
-import List from '../employee/List';
 
 
 // Registering the required chart.js components
 ChartJS.register(CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcElement,PointElement,LineElement);
 
-const AdminSummary = () => {
+const TLSummary = () => {
   const cardData = [
-    { title: "Total Employees", value: 50, bgColor: "bg-red-500" },
-    { title: "Headcount: Male/Female", value: "15/20", bgColor: "bg-yellow-500" },
-    { title: "Present Employees (Today)", value: 45, bgColor: "bg-green-500" },
-    { title: "Total Tasks", value: 100, bgColor: "bg-blue-500" },
-
+    { title: "Team Members", value: 50, bgColor: "bg-yellow-500/70" },
+    { title: "Headcount: Male/Female", value: "15/20", bgColor: "bg-yellow-500/70" },
+    { title: "Total Assigned Tasks", value: 100, bgColor: "bg-yellow-500/70" },
+    { title: "Present Team Members", value: 45, bgColor: "bg-yellow-500/70" },
   ];
 
 
@@ -176,7 +174,7 @@ const AdminSummary = () => {
             <Card className="p-6 shadow-md bg-white h-full" style={{ height: "100%" }}>
                 <CardContent style={{ padding: 0, height: "100%" }}>
                     <Typography variant="h6" component="div" className="font-bold text-lg">
-                    Attendance Score By Employee
+                    Team Members Attendance Score
                     </Typography>
                     <Line data={taskCompletionData} />
                 </CardContent>
@@ -186,7 +184,7 @@ const AdminSummary = () => {
             <Card className="p-6 shadow-md bg-white h-full" style={{ height: "100%" }}>
                 <CardContent style={{ padding: 0, height: "100%" }}>
                     <Typography variant="h6" component="div" className="font-bold text-lg">
-                    Employees KPI
+                    Team Members KPI
                     </Typography>
                     <Bar data={kpiData} />
                 </CardContent>
@@ -247,7 +245,7 @@ const AdminSummary = () => {
             <Card className="p-6 shadow-md bg-white h-full" style={{ height: "100%" }}>
                 <CardContent style={{ padding: 0, height: "100%" }}>
                     <Typography variant="h6" component="div" className="font-bold text-lg">
-                    Task Completed by Employees
+                    Task Completed by Team Members
                     </Typography>
                     <Bar data={employeeData} />
                 </CardContent>
@@ -266,10 +264,19 @@ const AdminSummary = () => {
                   options={{
                     responsive: true,
                     maintainAspectRatio: true,
+                    indexAxis: "y", // Set to horizontal stacking
                     plugins: {
-                    legend: {
-                        position: "top",
+                        legend: {
+                            position: "top",
+                        },
                     },
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            stacked: true,
+                        },
                     },
                 }}
                 />
@@ -282,5 +289,5 @@ const AdminSummary = () => {
 );    
 };
 
-export default AdminSummary;
+export default TLSummary;
 

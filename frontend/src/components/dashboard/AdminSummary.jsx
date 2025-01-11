@@ -291,10 +291,19 @@ const AdminSummary = () => {
                   options={{
                     responsive: true,
                     maintainAspectRatio: true,
+                    indexAxis: "y", // Set to horizontal stacking
                     plugins: {
-                    legend: {
-                        position: "top",
+                        legend: {
+                            position: "top",
+                        },
                     },
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            stacked: true,
+                        },
                     },
                 }}
                 />
