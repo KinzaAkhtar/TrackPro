@@ -1,21 +1,23 @@
-const mongoose = require('mongoose');
+import mongoose, { Schema } from "mongoose";
 
 const taskSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
-    assigned_to: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee', required: true },
-    assigned_by: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee', required: true },
-    priority: { type: String, enum: ['High', 'Medium', 'Low'], required: true },
-    status: { type: String, enum: ['To Do', 'In Progress', 'Completed'], required: true },
+    assigned_to: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
+    assigned_by: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
+    priority: { type: String, required: true },
+    status: { type: String, required: true, default: "TODO" },
     deadline: { type: Date, required: true },
-    performance_metrics: {
-        time_taken: { type: Number, required: true }, // In hours
-        quality_score: { type: Number, required: true }, // Out of 100
-        feedback: { type: String, required: false }
-    },
-    created_at: { type: Date, default: Date.now },
-    updated_at: { type: Date, default: Date.now }
+    done_on: { type: Date },
+    department: { type: String, required: true },
+    tasktype: { type: String, required: true },
+    quality_score: { type: Number }, // Out of 100
+    attached_file: { type: String },//cloudinary url
+    returned: { type: Boolean },
+    return_message: { type: String },
+    commentsection: { type: mongoose.Schema.Types.ObjectId, ref: 'comment' }
+}, {
+    timestamps: true,
 });
 
-const Task = mongoose.model('Task', taskSchema);
-module.exports = Task;
+export const Task = mongoose.model('Task', taskSchema);

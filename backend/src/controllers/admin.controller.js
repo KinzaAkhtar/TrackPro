@@ -1,5 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Employee } from "../models/employee.model.js";
+import { Task } from "../models/task.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
@@ -100,4 +101,121 @@ const AddEmployee = asyncHandler(async (req, res) => {
 
 
 
-export { AddEmployee }
+// Get all employees
+const getEmployee = asyncHandler(async (req, res) => {
+
+
+    try {
+        const employees = await Employee.find().select(
+            "name ID phoneno workemail department designation"
+        ); // Adjust fields as needed
+        return res
+            .status(201)
+            .json(new ApiResponse(201, employees, "fetch employee successfully"))
+    } catch (error) {
+        return res
+            .status(500)
+            .json(new ApiResponse(500, "Failed to fetch employees"))
+    }
+
+
+});
+
+
+
+// Get all employees
+const createtask = asyncHandler(async (req, res) => {
+
+
+    try {
+        console.log(req.body);
+        let myfile, myfile_upload = null;
+
+        if (req.file) {
+            myfile = req.file.path; // Path of the uploaded file
+            myfile_upload = await uploadOnCloudinary(myfile); // Upload to Cloudinary
+        }
+        // const myfile = req.file['attachment']?.[0]?.path || null;
+        // const myfile_upload = myfile
+        //     ? await uploadOnCloudinary(myfile)
+        //     : null;
+
+        const { taskTitle, taskDescription, selectedDepartment, selectedTaskType, deadline, priority } = req.body;
+        const newtask = await Task.create({
+            title: taskTitle,
+            description: taskDescription,
+            department: selectedDepartment,
+            tasktype: selectedTaskType,
+            priority,
+            deadline,
+            attached_file: myfile_upload?.url || "",  // Ensure cvUpload is optional
+        });
+        if (!newtask) {
+            return res.status(500)
+                .json(new ApiResponse(500, "No task created!"))
+        }
+        return res
+            .status(201)
+            .json(new ApiResponse(201, "Task created successfully"))
+    } catch (error) {
+        console.log(error)
+        return res
+            .status(500)
+            .json(new ApiResponse(500, "Failed to create task!"))
+    }
+});
+
+// Get all employees
+const gettasks = asyncHandler(async (req, res) => {
+    try {
+        const tasks = await Task.find().select(
+            "title description department tasktype priority deadline status"
+        ); // Adjust fields as needed
+        return res
+            .status(201)
+            .json(new ApiResponse(201, tasks, "fetch task successfully"))
+    } catch (error) {
+        return res
+            .status(500)
+            .json(new ApiResponse(500, "Failed to fetch task"))
+    }
+});
+const deleteEmployee = asyncHandler(async (req, res) => {
+    try {
+        console.log(req.body)
+        const employee = await Employee.findByIdAndDelete(req.body.userId);
+
+        if (!employee) {
+            return res.status(404).json(new ApiResponse(404, 'Employee not found'));
+        }
+        return res
+            .status(201)
+            .json(new ApiResponse(201, "delete successfully"))
+    } catch (error) {
+        return res
+            .status(500)
+            .json(new ApiResponse(500, "Failed to delete employee"))
+    }
+});
+const deleteTask = asyncHandler(async (req, res) => {
+    try {
+        console.log(req.body)
+        const task = await Task.findByIdAndDelete(req.body.taskId);
+
+        if (!task) {
+            return res.status(404).json(new ApiResponse(404, 'Employee not found'));
+        }
+        return res
+            .status(201)
+            .json(new ApiResponse(201, "delete successfully"))
+    } catch (error) {
+        return res
+            .status(500)
+            .json(new ApiResponse(500, "Failed to delete employee"))
+    }
+});
+
+
+
+
+export { AddEmployee, getEmployee, createtask, gettasks, deleteEmployee, deleteTask }

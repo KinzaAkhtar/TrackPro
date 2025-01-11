@@ -9,7 +9,7 @@ import { WebStories } from '@mui/icons-material';
 
 
 
-// Dummy Data for Departments and Team Leads
+// Dummy Data for Departments and task type
 const departments = ['EBook', 'Marketing', 'ContentWriting', 'WebDevelopment', 'Design', 'Publication', 'Outsourcing', 'Video'];
 const TaskType= {
   EBook: ['Editing/ProofReading', 'Ghost Writing'],
@@ -77,7 +77,7 @@ const TaskForm = () => {
     if (attachment) formData.append('attachment', attachment);
   
     try {
-      const response = await axios.post('/api/v1/admin/createticket', formData, {
+      const response = await axios.post('/api/v1/admin/createtask', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       if (response.data.success) {

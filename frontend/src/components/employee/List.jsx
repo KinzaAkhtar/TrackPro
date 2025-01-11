@@ -1,35 +1,60 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom"; 
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { FaEye, FaPen, FaTrash } from "react-icons/fa";
+import axios from "axios"; // Ensure axios is imported
 import EditEmployee from "./EditEmployee";
-import ViewEmployee from "./ViewEmployee";
-import { Drawer, Dialog, DialogActions, DialogContent, DialogTitle, Button, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Menu, MenuItem } from "@mui/material";
+import {
+  Drawer,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  Snackbar,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Menu,
+  MenuItem
+} from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const List = () => {
-  const mockEmployees = [
-    { _id: "1", fullname: "John Doe", designation: "Software Engineer", workEmail: "ali@trackpro.com", dept: "Engineering", phoneNo: "03232566196" },
-    { _id: "2", fullname: "Jane Smith", designation: "Product Manager", workEmail: "ali@trackpro.com", dept: "Product", phoneNo: "03232566196" },
-    { _id: "3", fullname: "John Doe", designation: "Software Engineer", workEmail: "ali@trackpro.com", dept: "Engineering", phoneNo: "03232566196" },
-    { _id: "4", fullname: "Jane Smith", designation: "Product Manager", workEmail: "ali@trackpro.com", dept: "Product", phoneNo: "03232566196" },
-    { _id: "5", fullname: "John Doe", designation: "Software Engineer", workEmail: "ali@trackpro.com", dept: "Engineering", phoneNo: "03232566196" },
-    { _id: "6", fullname: "Jane Smith", designation: "Product Manager", workEmail: "ali@trackpro.com", dept: "Product", phoneNo: "03232566196" },
-  ];
-
-  const [employees, setEmployees] = useState(mockEmployees);
+  const [employees, setEmployees] = useState([]); // Initialize with an empty array
   const [search, setSearch] = useState("");
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false); 
+  const [openDialog, setOpenDialog] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null); // For managing the dropdown menu
+  const [loading, setLoading] = useState(true); // For tracking loading state
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get("/api/v1/admin/getemployees");
+        console.log("Fetched Employees:", response.data);
+        setEmployees(response.data.data || []); // Use `data` field from the response
+        setLoading(false);
+      } catch (error) {
+        console.error("Error:", error.message);
+        setLoading(false);
+      }
+    };
+    fetchEmployees();
+  }, []); // Empty dependency array ensures it runs once on component mount
 
   const handleSearch = (event) => {
     setSearch(event.target.value);
   };
 
   const filteredEmployees = employees.filter((employee) =>
-    employee.fullname.toLowerCase().includes(search.toLowerCase())
+    employee.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleMenuClick = (event, rowId) => {
@@ -64,16 +89,27 @@ const List = () => {
     setSelectedEmployee(null);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (selectedEmployee) {
-      setEmployees(employees.filter((employee) => employee._id !== selectedEmployee._id));
-      closeDeleteDialog();
-      setOpenSnackbar(true); 
+      try {
+        // Send a POST request to delete the employee
+        await axios.post('/api/v1/admin/deleteEmployee', { userId: selectedEmployee._id });
+
+        // Update the state to remove the employee from the list
+        setEmployees(employees.filter((employee) => employee._id !== selectedEmployee._id));
+
+        // Close the delete dialog and show success snackbar
+        closeDeleteDialog();
+        setOpenSnackbar(true);
+      } catch (error) {
+        console.error('Error deleting employee:', error);
+        // Optionally, you can display an error snackbar or message
+      }
     }
   };
 
   const handleCloseSnackbar = () => {
-    setOpenSnackbar(false); 
+    setOpenSnackbar(false);
   };
 
   return (
@@ -97,62 +133,64 @@ const List = () => {
         </Link>
       </div>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Employee ID</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Designation</TableCell>
-              <TableCell>Work Email</TableCell>
-              <TableCell>Department</TableCell>
-              <TableCell>Phone No.</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredEmployees.map((row) => (
-              <TableRow key={row._id}>
-                <TableCell>{row._id}</TableCell>
-                <TableCell>{row.fullname}</TableCell>
-                <TableCell>{row.designation}</TableCell>
-                <TableCell>{row.workEmail}</TableCell>
-                <TableCell>{row.dept}</TableCell>
-                <TableCell>{row.phoneNo}</TableCell>
-                <TableCell>
-                  <IconButton onClick={(event) => handleMenuClick(event, row._id)}>
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Menu
-                    anchorEl={anchorEl?.[row._id]}
-                    open={Boolean(anchorEl?.[row._id])}
-                    onClose={handleMenuClose}
-                  >
-                    <MenuItem
-                      component={Link}
-                      to={`/admin-dashboard/view-employee/${row._id}`}
-                      onClick={handleMenuClose}
-                    >
-                      <FaEye className="mr-2" /> View
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => handleEdit(row)}
-                    >
-                      <FaPen className="mr-2" /> Edit
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => openDeleteDialog(row)}
-                      style={{ color: 'red' }}
-                    >
-                      <FaTrash className="mr-2" /> Delete
-                    </MenuItem>
-                  </Menu>
-                </TableCell>
+      {loading ? (
+        <div className="text-center">Loading employees...</div>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Designation</TableCell>
+                <TableCell>Work Email</TableCell>
+                <TableCell>Department</TableCell>
+                <TableCell>Phone No.</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {filteredEmployees.map((row) => (
+                <TableRow key={row._id}>
+                  <TableCell>{row.ID}</TableCell>
+                  <TableCell>{row.name}</TableCell>
+                  <TableCell>{row.designation}</TableCell>
+                  <TableCell>{row.workemail}</TableCell>
+                  <TableCell>{row.department}</TableCell>
+                  <TableCell>{row.phoneno}</TableCell>
+                  <TableCell>
+                    <IconButton onClick={(event) => handleMenuClick(event, row._id)}>
+                      <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                      anchorEl={anchorEl?.[row._id]}
+                      open={Boolean(anchorEl?.[row._id])}
+                      onClose={handleMenuClose}
+                    >
+                      <MenuItem
+                        component={Link}
+                        to={`/admin-dashboard/view-employee/${row._id}`}
+                        onClick={handleMenuClose}
+                      >
+                        <FaEye className="mr-2" /> View
+                      </MenuItem>
+                      <MenuItem onClick={() => handleEdit(row)}>
+                        <FaPen className="mr-2" /> Edit
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => openDeleteDialog(row)}
+                        style={{ color: 'red' }}
+                      >
+                        <FaTrash className="mr-2" /> Delete
+                      </MenuItem>
+                    </Menu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
 
       <Drawer
         anchor="right"
@@ -192,10 +230,10 @@ const List = () => {
         onClose={handleCloseSnackbar}
         message="Employee deleted successfully"
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        sx={{ 
-          backgroundColor: "rgb(39, 174, 96)", 
-          opacity: 0.9, 
-          borderRadius: "4px", 
+        sx={{
+          backgroundColor: "rgb(39, 174, 96)",
+          opacity: 0.9,
+          borderRadius: "4px",
         }}
       />
     </div>

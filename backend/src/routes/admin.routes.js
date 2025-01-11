@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AddEmployee } from "../controllers/admin.controller.js"
+import { AddEmployee, getEmployee, createtask, gettasks, deleteEmployee, deleteTask } from "../controllers/admin.controller.js"
 import { upload } from "../middlewares/multer.middleware.js";
 const router = Router()
 
@@ -14,6 +14,11 @@ router.route("/addemployee").post(upload.fields([
         maxCount: 1
     }
 ]), AddEmployee)
+router.route("/getemployees").get(getEmployee)
+router.route("/createtask").post(upload.single("attachment"), createtask)
+router.route("/gettasks").get(gettasks)
+router.route("/deleteEmployee").post(deleteEmployee)
+router.route("/deleteTask").post(deleteTask)
 // router.route("/getemployeelist").post(getemployeelist)
 
 

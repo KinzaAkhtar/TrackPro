@@ -31,7 +31,7 @@ const EditEmployee = ({ employee, onClose, onSave }) => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <TextField
           label="Full Name"
-          name="fullname"
+          name="name"
           variant="outlined"
           fullWidth
           value={formData.fullname}

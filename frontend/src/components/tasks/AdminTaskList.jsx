@@ -1,37 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Menu, MenuItem, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import { Delete as DeleteIcon, Visibility as VisibilityIcon, MoreVert as MoreVertIcon } from '@mui/icons-material';
-
-const tasksData = [
-  {
-    id: 1,
-    taskTitle: 'Fix Bug in Homepage',
-    taskDescription: 'Fix the responsive issue on the homepage',
-    department: 'Video',
-    taskType: 'Book Trailer',
-    priority: 'High Priority',
-    deadline: '2025-01-15',
-  },
-  {
-    id: 2,
-    taskTitle: 'Update Marketing Plan',
-    taskDescription: 'Update the marketing plan for Q1',
-    department: 'Marketing',
-    taskType: 'Post',
-    priority: 'Low Priority',
-    deadline: '2025-01-20',
-  },
-  // More tasks can be added here
-];
+import axios from 'axios';
 
 const TaskList = () => {
-  const [tasks, setTasks] = useState(tasksData);
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
 
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const navigate = useNavigate();
+
+  // Fetching tasks from the API when the component mounts
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get("/api/v1/admin/gettasks");
+        console.log("Fetched Tasks:", response.data);
+        setTasks(response.data.data || []);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error:", error.message);
+        setLoading(false);
+      }
+    };
+    fetchTasks();
+  }, []);
 
   const handleMenuClick = (event, task) => {
     setAnchorEl(event.currentTarget);
@@ -43,16 +39,24 @@ const TaskList = () => {
     setSelectedTask(null);
   };
 
-  const handleDelete = () => {
-    // Delete task logic: Remove the task from the state
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== selectedTask.id));
-    handleCloseMenu();
-    setOpenDialog(false);
+  const handleDelete = async () => {
+    try {
+      // Send a POST request to delete the selected task using selectedTask.id
+      await axios.post('/api/v1/admin/deleteTask', { taskId: selectedTask._id });
+
+      // Update the state to remove the deleted task
+      setTasks((prevTasks) => prevTasks.filter((task) => task._id !== selectedTask._id));
+
+      // Close the menu and dialog
+      handleCloseMenu();
+      setOpenDialog(false);
+    } catch (error) {
+      console.error('Error deleting task:', error.response?.data?.message || error.message);
+    }
   };
 
   const handleView = () => {
-    // Navigate to the view task details page, passing the task id in the URL
-    navigate(`/admin-dashboard/view-task/${selectedTask.id}`);
+    navigate(`/admin-dashboard/view-task/${selectedTask._id}`);
     handleCloseMenu();
   };
 
@@ -89,53 +93,74 @@ const TaskList = () => {
               <TableCell className="py-3 px-6 text-left font-medium">Department</TableCell>
               <TableCell className="py-3 px-6 text-left font-medium">Task Type</TableCell>
               <TableCell className="py-3 px-6 text-left font-medium">Priority</TableCell>
+              <TableCell className="py-3 px-6 text-left font-medium">Status</TableCell>
               <TableCell className="py-3 px-6 text-left font-medium">Deadline</TableCell>
               <TableCell className="py-3 px-6 text-left font-medium">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {tasks.map((task) => (
-              <TableRow key={task.id} className="hover:bg-gray-50 transition duration-200">
-                <TableCell className="py-3 px-6" style={{ maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {task.taskTitle}
-                </TableCell>
-                <TableCell className="py-3 px-6" style={{ maxWidth: '250px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {task.taskDescription}
-                </TableCell>
-                <TableCell className="py-3 px-6">{task.department}</TableCell>
-                <TableCell className="py-3 px-6">{task.taskType}</TableCell>
-                <TableCell className="py-3 px-6">
-                  <span className={`px-3 py-1 rounded-full text-white ${task.priority === 'High Priority' ? 'bg-red-500' : 'bg-yellow-500'}`}>
-                    {task.priority}
-                  </span>
-                </TableCell>
-                <TableCell className="py-3 px-6">{task.deadline}</TableCell>
-                <TableCell className="py-3 px-6">
-                  <IconButton onClick={(e) => handleMenuClick(e, task)}>
-                    <MoreVertIcon />
-                  </IconButton>
-                </TableCell>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={7} className="text-center">Loading...</TableCell>
               </TableRow>
-            ))}
+            ) : (
+              tasks.map((task) => (
+                <TableRow key={task._id} className="hover:bg-gray-50 transition duration-200">
+                  <TableCell className="py-3 px-6" style={{ maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {task.title}
+                  </TableCell>
+                  <TableCell className="py-3 px-6" style={{ maxWidth: '250px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {task.description}
+                  </TableCell>
+                  <TableCell className="py-3 px-6">{task.department}</TableCell>
+                  <TableCell className="py-3 px-6">{task.tasktype}</TableCell>
+                  <TableCell className="py-3 px-6">
+                    <span className={`px-3 py-1 rounded-full text-white ${task.priority === 'High Priority' ? 'bg-red-500' : 'bg-yellow-500'}`}>
+                      {task.priority}
+                    </span>
+                  </TableCell>
+                  <TableCell className="py-3 px-6">
+                    <span
+                      className={`px-3 py-1 rounded-full text-white ${task.status === 'TODO'
+                        ? 'bg-red-500'
+                        : task.status === 'in progress'
+                          ? 'bg-yellow-500'
+                          : task.status === 'completed'
+                            ? 'bg-blue-500'
+                            : task.status === 'evaluated'
+                              ? 'bg-green-500'
+                              : ''
+                        }`}
+                    >
+                      {task.status}
+                    </span>
+                  </TableCell>
+                  <TableCell className="py-3 px-6">{task.deadline}</TableCell>
+                  <TableCell className="py-3 px-6">
+                    <IconButton onClick={(e) => handleMenuClick(e, task)}>
+                      <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={handleCloseMenu}
+                    >
+                      <MenuItem onClick={handleView}>
+                        <VisibilityIcon style={{ marginRight: 8 }} />
+                        View
+                      </MenuItem>
+                      <MenuItem onClick={openDeleteDialog} style={{ color: 'red' }}>
+                        <DeleteIcon style={{ marginRight: 8 }} />
+                        Delete
+                      </MenuItem>
+                    </Menu>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
-
-      {/* Menu for Delete and View options */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleCloseMenu}
-      >
-        <MenuItem onClick={handleView}>
-          <VisibilityIcon style={{ marginRight: 8 }} />
-          View
-        </MenuItem>
-        <MenuItem onClick={openDeleteDialog} style={{ color: 'red' }}>
-          <DeleteIcon style={{ marginRight: 8 }} />
-          Delete
-        </MenuItem>
-      </Menu>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDialog} onClose={closeDeleteDialog}>
@@ -144,23 +169,10 @@ const TaskList = () => {
           This action cannot be undone.
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={closeDeleteDialog}
-            style={{
-              backgroundColor: '#d3d3d3', 
-              opacity: 0.6, 
-              color: '#000',
-            }}
-          >
+          <Button onClick={closeDeleteDialog} style={{ backgroundColor: '#d3d3d3', opacity: 0.6, color: '#000' }}>
             Cancel
           </Button>
-          <Button
-            onClick={handleDelete}
-            style={{
-              backgroundColor: 'rgb(239, 68, 68)', 
-              color: 'white',
-            }}
-          >
+          <Button onClick={handleDelete} style={{ backgroundColor: 'rgb(239, 68, 68)', color: 'white' }}>
             Delete
           </Button>
         </DialogActions>

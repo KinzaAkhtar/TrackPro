@@ -33,6 +33,7 @@ const AdminSummary = () => {
       };
 
   // KPI values of employees chart data
+  
   const kpiData = {
     labels: ["Alice", "Bob", "Charlie", "David", "John Doe"],
     datasets: [
