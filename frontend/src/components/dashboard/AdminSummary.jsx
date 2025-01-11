@@ -110,14 +110,14 @@ const AdminSummary = () => {
       {
         label: "Pending Tasks",
         data: [5, 10, 6, 2, 7], // Pending tasks for each employee
-        backgroundColor: "rgba(255, 99, 132, 0.6)", // Red color for pending tasks
+        backgroundColor: "rgba(256, 0, 0, 0.6)", // Red color for pending tasks
         borderColor: "#FF6384", // Border color
         borderWidth: 1, // Border width
       },
       {
         label: "In Progress Tasks",
         data: [4, 8, 5, 3, 6], // In-progress tasks for each employee
-        backgroundColor: "rgba(54, 162, 235, 0.6)", // Blue color for in-progress tasks
+        backgroundColor: "rgba(243, 239, 18, 0.6)", // Blue color for in-progress tasks
         borderColor: "#36A2EB", // Border color
         borderWidth: 1, // Border width
       },
