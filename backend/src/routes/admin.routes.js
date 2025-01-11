@@ -14,7 +14,7 @@ router.route("/addemployee").post(upload.fields([
         maxCount: 1
     }
 ]), AddEmployee)
-router.route("/getemployeelist").post(getemployeelist)
+// router.route("/getemployeelist").post(getemployeelist)
 
 
 
