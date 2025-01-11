@@ -12,12 +12,13 @@ ChartJS.register(CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcEl
 const AdminSummary = () => {
   const cardData = [
     { title: "Total Employees", value: 50, bgColor: "bg-red-500" },
-    { title: "New Employees (This Month)", value: 15, bgColor: "bg-yellow-500" },
+    { title: "Headcount: Male/Female", value: "15/20", bgColor: "bg-yellow-500" },
     { title: "Present Employees (Today)", value: 45, bgColor: "bg-green-500" },
     { title: "Total Tasks", value: 100, bgColor: "bg-blue-500" },
 
   ];
   const employeeOfTheMonth = "John Doe"; // Best KPI employee
+  const departmentOfTheMonth = "Design"; // Best department with more completed task
 
     // Department-wise employee distribution chart data
     const departmentData = {
@@ -45,12 +46,34 @@ const AdminSummary = () => {
     ],
   };
 
-  // Daily task completion chart data
-  const taskCompletionData = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+  // Department performance data for the horizontal stacked bar chart
+  const departmentPerformanceData = {
+    labels: ["EBook", "Marketing", "Content Writing", "Web Development", "Design", "Publication", "Outsourcing", "Video"],
     datasets: [
       {
-        label: "Tasks Completed",
+        label: "Overdue Tasks",
+        data: [3, 5, 2, 4, 1,7,8,9],
+        backgroundColor: "rgba(256, 0, 0, 0.6)",
+      },
+      {
+        label: "In Progress Tasks",
+        data: [10, 15, 7, 9, 6,12,45,67],
+        backgroundColor: "rgba(243, 239, 18, 0.6)",
+      },
+      {
+        label: "Completed Tasks",
+        data: [17, 20, 5, 2, 2,8,5,6],
+        backgroundColor: "rgba(25, 109, 9, 0.6)",
+      },
+    ],
+  };
+
+  // Daily task completion chart data
+  const taskCompletionData = {
+    labels: ["Alice", "John", "Doe", "Deer", "Sam"],
+    datasets: [
+      {
+        label: "Employees",
         data: [10, 25, 40, 20, 15],
         borderColor: "#36A2EB",
         backgroundColor: "rgba(54, 162, 235, 0.2)",
@@ -79,6 +102,7 @@ const AdminSummary = () => {
       },
     ],
   };
+  
 
   const employeeData = {
     labels: ["Alice", "Bob", "Charlie", "David", "John Doe"], // Employee names
@@ -158,7 +182,7 @@ const AdminSummary = () => {
             <Card className="p-6 shadow-md bg-white h-full" style={{ height: "100%" }}>
                 <CardContent style={{ padding: 0, height: "100%" }}>
                     <Typography variant="h6" component="div" className="font-bold text-lg">
-                    Tasks Completed Daily
+                    Attendance Score By Employee
                     </Typography>
                     <Line data={taskCompletionData} />
                 </CardContent>
@@ -247,13 +271,38 @@ const AdminSummary = () => {
           <Card className="mb-6 p-6 bg-yellow-300 shadow-lg" style={{ height: "150px" }}>
             <CardContent style={{ padding: 0, height: "100%" }}>
               <Typography variant="h5" component="div" className="font-semibold">
-                Employee of the Month: {employeeOfTheMonth}
+                Department of the Month: {departmentOfTheMonth}
               </Typography>
             </CardContent>
           </Card>
         </Grid>
-        
     </Grid>
+    {/* Department Performance Horizontal Stacked Bar Chart */}
+    <Grid container spacing={4} style={{ marginTop: "15px" }}>
+        <Grid item xs={12}>
+          <Card className="p-6 shadow-md bg-white">
+            <CardContent style={{ padding: 0 }}>
+              <Typography variant="h6" component="div" className="font-bold text-lg">
+                Department Performance
+              </Typography>
+              <div style={{ height: "320px", display: "flex" }}>
+                <Bar
+                  data={departmentPerformanceData}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                    legend: {
+                        position: "top",
+                    },
+                    },
+                }}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     </Box>
 );    
 };
