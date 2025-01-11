@@ -1,10 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
 import { Doughnut, Line } from "react-chartjs-2";
 import "chart.js/auto";
+import { Button, Snackbar, Alert } from "@mui/material";
 
 const Dashboard = () => {
+  const [hasCheckedIn, setHasCheckedIn] = useState(false); // Track if user has checked in
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const handleCheckIn = () => {
+    const timestamp = new Date().toLocaleString();
+    setSnackbarMessage(`Checked in at ${timestamp}`);
+    setSnackbarSeverity("success");
+    setSnackbarOpen(true);
+    setHasCheckedIn(true); // Enable checkout button
+  };
+
+  const handleCheckOut = () => {
+    const timestamp = new Date().toLocaleString();
+    setSnackbarMessage(`Checked out at ${timestamp}`);
+    setSnackbarSeverity("info");
+    setSnackbarOpen(true);
+    setHasCheckedIn(false); // Disable checkout button after checking out
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
     <div style={styles.dashboardContainer}>
+      {/* System Admin Dashboard Section */}
+      <div style={styles.employeeDashboardSection}>
+        <div style={styles.employeeCard}>
+          <h3 style={styles.employeeTitle}>Welcome Back, Hiba!</h3>
+          <div style={styles.buttonContainer}>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleCheckIn}
+              style={styles.button}
+              disabled={hasCheckedIn} // Disable check-in button after user has checked in
+            >
+              Check-In
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleCheckOut}
+              style={styles.button}
+              disabled={!hasCheckedIn} // Disable check-out button until user has checked in
+            >
+              Check-Out
+            </Button>
+          </div>
+        </div>
+      </div>
+
       {/* Summary Section */}
       <div style={styles.summarySection}>
         {summaryData.map((item, index) => (
@@ -22,7 +75,7 @@ const Dashboard = () => {
                   plugins: {
                     legend: { display: false },
                   },
-                  cutout: "70%", // Adjust the cutout percentage to make the chart smaller
+                  cutout: "70%",
                 }}
               />
             </div>
@@ -35,9 +88,9 @@ const Dashboard = () => {
       <div style={styles.performanceSection}>
         <h3 style={styles.sectionTitle}>Performance Progress</h3>
         <div style={styles.progressBarContainer}>
-          <div style={{ ...styles.progressBar, width: "80%" }}></div>
+          <div style={styles.progressBar}></div>
         </div>
-        <p>80% of monthly target achieved</p>
+        <p style={styles.progressText}>80% of monthly target achieved</p>
       </div>
 
       {/* Charts Section */}
@@ -49,6 +102,22 @@ const Dashboard = () => {
           </div>
         ))}
       </div>
+
+      {/* Snackbar Notification */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
@@ -58,13 +127,13 @@ const summaryData = [
   {
     title: <b>Total Working Hours</b>,
     value: "120 hrs",
-    color: "#3B82F6", // Royal Blue
+    color:" rgba(245, 158, 11, 0.5)",
     chartData: {
       labels: ["Worked", "Remaining"],
       datasets: [
         {
           data: [120, 40],
-          backgroundColor: ["#2563EB", "#D1D5DB"], // Medium Blue, Light Gray
+          backgroundColor: ["#2563EB", "#D1D5DB"],
         },
       ],
     },
@@ -72,13 +141,13 @@ const summaryData = [
   {
     title: <b>Attendance Percentage</b>,
     value: "95%",
-    color: "#F59E0B", // Gold
+    color:" rgba(245, 158, 11, 0.5)",
     chartData: {
       labels: ["Present", "Absent"],
       datasets: [
         {
           data: [95, 5],
-          backgroundColor: ["#10B981", "#D1D5DB"], // Emerald Green, Light Gray
+          backgroundColor: ["#10B981", "#D1D5DB"],
         },
       ],
     },
@@ -86,13 +155,13 @@ const summaryData = [
   {
     title: <b>Tasks Completed</b>,
     value: "42/50",
-    color: "#10B981", // Emerald Green
+    color: "rgba(245, 158, 11, 0.5)",
     chartData: {
       labels: ["Completed", "Pending"],
       datasets: [
         {
           data: [42, 8],
-          backgroundColor: ["#3B82F6", "#FBBF24"], // Sky Blue, Amber
+          backgroundColor: ["#3B82F6", "#D1D5DB"],
         },
       ],
     },
@@ -100,13 +169,13 @@ const summaryData = [
   {
     title: <b>Leave Balance</b>,
     value: "5 Days",
-    color: "#EF4444", // Vivid Red
+    color: "rgba(245, 158, 11, 0.5)",
     chartData: {
       labels: ["Used", "Remaining"],
       datasets: [
         {
           data: [15, 5],
-          backgroundColor: ["#DC2626", "#34D399"], // Dark Red, Light Green
+          backgroundColor: ["#DC2626", "#D1D5DB"],
         },
       ],
     },
@@ -133,17 +202,17 @@ const chartData = [
           ],
         }}
         options={{
-          maintainAspectRatio: false, // Adjust the chart to fit the card
+          maintainAspectRatio: false,
           responsive: true,
           plugins: {
             legend: { display: false },
           },
           scales: {
             x: {
-              ticks: { font: { size: 12 } }, // Smaller font for x-axis
+              ticks: { font: { size: 12 } },
             },
             y: {
-              ticks: { font: { size: 12 } }, // Smaller font for y-axis
+              ticks: { font: { size: 12 } },
               beginAtZero: true,
             },
           },
@@ -165,17 +234,17 @@ const chartData = [
           ],
         }}
         options={{
-          maintainAspectRatio: false, // Adjust the chart to fit the card
+          maintainAspectRatio: false,
           responsive: true,
           plugins: {
             legend: {
               position: "bottom",
               labels: {
-                font: { size: 12 }, // Smaller font for legend
+                font: { size: 12 },
               },
             },
           },
-          cutout: "60%", // Smaller cutout for a compact chart
+          cutout: "60%",
         }}
       />
     ),
@@ -188,75 +257,101 @@ const styles = {
     padding: "20px",
     maxWidth: "1200px",
     margin: "0 auto",
-    backgroundColor: "#ffff",
+    backgroundColor: "#fff",
     fontFamily: "Arial, sans-serif",
   },
+  employeeDashboardSection: {
+    marginBottom: "30px",
+    background: "#fff",
+    padding: "10px",
+    borderRadius: "10px",
+    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+    textAlign: "left",
+  },
+  employeeCard: {
+    padding: "20px",
+    background: "linear-gradient(to left, #FF5722, #FFC107, #FFEB3B)",
+    borderRadius: "10px",
+    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+    color: "#fff",
+  },
+  employeeTitle: {
+    fontSize: "2rem",
+    fontWeight: "bold",
+  },
+  buttonContainer: {
+    marginTop: "20px",
+    display: "flex",
+    gap: "10px",
+  },
+  button: {
+    fontSize: "1rem",
+  },
+  // Modify Summary and Charts Section Styles
   summarySection: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+    display: "flex",
+    flexWrap: "wrap",
     gap: "20px",
+    justifyContent: "space-between",
     marginBottom: "30px",
   },
   summaryCard: {
-    padding: "10px",
+    width: "22%",
     borderRadius: "10px",
-    boxShadow: "0 2px 5px #b67726",
+    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+    padding: "20px",
     textAlign: "center",
-    height: "250px",
-  },
-  cardTitle: {
-    marginBottom: "10px",
-    fontSize: "16px",
-    color: "#000000",
   },
   chartWrapper: {
-    height: "120px",
-    marginBottom: "10px",
-  },
-  cardValue: {
-    fontSize: "14px",
-    fontWeight: "bold",
-    color: "#000000",
+    position: "relative",
+    marginTop: "10px",
   },
   performanceSection: {
     marginBottom: "30px",
-    background: "#fff",
     padding: "20px",
+    background: "#F9FAFB",
     borderRadius: "10px",
-    boxShadow: "0 2px 5px #e02424",
+    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+  },
+  sectionTitle: {
+    fontSize: "1.5rem",
+    fontWeight: "bold",
+    marginBottom: "10px",
   },
   progressBarContainer: {
-    background: "#ddd",
-    borderRadius: "5px",
-    overflow: "hidden",
+    width: "100%",
     height: "20px",
-    margin: "10px 0",
+    backgroundColor: "#E5E7EB",
+    borderRadius: "10px",
+    overflow: "hidden",
   },
   progressBar: {
     height: "100%",
-    background: "#4CAF50",
+    width: "80%",
+    backgroundColor: "#10B981",
+  },
+  progressText: {
+    textAlign: "center",
+    marginTop: "10px",
+    fontSize: "1rem",
   },
   chartsSection: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+    display: "flex",
+    flexWrap: "wrap",
     gap: "20px",
+    justifyContent: "space-between",
+    marginBottom: "30px",
   },
   chartCard: {
-    background: "#fff",
-    padding: "20px",
+    width: "48%",
     borderRadius: "10px",
-    boxShadow: "0 2px 5px #e64d1e",
-    height: "300px",
-  },
-  chartWrapper: {
-    height: "250px",
-    position: "relative",
+    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+    padding: "20px",
   },
   chartTitle: {
-    marginBottom: "10px",
-    fontSize: "16px",
+    fontSize: "1.2rem",
     fontWeight: "bold",
-    textAlign: "center",
+    marginBottom: "15px",
   },
 };
 
