@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import Link
-import DataTable from "react-data-table-component";
+import { Link } from "react-router-dom"; 
 import { FaEye, FaPen, FaTrash } from "react-icons/fa";
 import EditEmployee from "./EditEmployee";
 import ViewEmployee from "./ViewEmployee";
-import { Drawer } from "@mui/material";
+import { Drawer, Dialog, DialogActions, DialogContent, DialogTitle, Button, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Menu, MenuItem } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const List = () => {
-  // Mock employee data
   const mockEmployees = [
     { _id: "1", fullname: "John Doe", designation: "Software Engineer", workEmail: "ali@trackpro.com", dept: "Engineering", phoneNo: "03232566196" },
     { _id: "2", fullname: "Jane Smith", designation: "Product Manager", workEmail: "ali@trackpro.com", dept: "Product", phoneNo: "03232566196" },
@@ -19,9 +18,11 @@ const List = () => {
 
   const [employees, setEmployees] = useState(mockEmployees);
   const [search, setSearch] = useState("");
-  const [dropdowns, setDropdowns] = useState({});
-  const [openDrawer, setOpenDrawer] = useState(false); 
-  const [selectedEmployee, setSelectedEmployee] = useState(null); 
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false); 
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null); // For managing the dropdown menu
 
   const handleSearch = (event) => {
     setSearch(event.target.value);
@@ -31,11 +32,12 @@ const List = () => {
     employee.fullname.toLowerCase().includes(search.toLowerCase())
   );
 
-  const toggleDropdown = (id) => {
-    setDropdowns((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+  const handleMenuClick = (event, rowId) => {
+    setAnchorEl({ [rowId]: event.currentTarget });
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   const handleEdit = (employee) => {
@@ -52,94 +54,27 @@ const List = () => {
     setOpenDrawer(false);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this employee?")) {
-      setEmployees(employees.filter((employee) => employee._id !== id));
+  const openDeleteDialog = (employee) => {
+    setSelectedEmployee(employee);
+    setOpenDialog(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setOpenDialog(false);
+    setSelectedEmployee(null);
+  };
+
+  const handleDelete = () => {
+    if (selectedEmployee) {
+      setEmployees(employees.filter((employee) => employee._id !== selectedEmployee._id));
+      closeDeleteDialog();
+      setOpenSnackbar(true); 
     }
   };
 
-  const columns = [
-    {
-      name: "Employee ID",
-      selector: (row) => row._id,
-      sortable: true,
-    },
-    {
-      name: "Name",
-      selector: (row) => row.fullname,
-      sortable: true,
-    },
-    {
-      name: "Designation",
-      selector: (row) => row.designation,
-      sortable: true,
-    },
-    {
-      name: "Work Email",
-      selector: (row) => row.workEmail,
-      sortable: true,
-    },
-    {
-      name: "Department",
-      selector: (row) => row.dept,
-      sortable: true,
-    },
-    {
-      name: "Phone No.",
-      selector: (row) => row.phoneNo,
-      sortable: true,
-    },
-    {
-      name: "Actions",
-      cell: (row) => {
-        return (
-          <div className="relative">
-            <button
-              onClick={() => toggleDropdown(row._id)}
-              className="px-2 py-1 text-gray-600 hover:text-gray-900"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                strokeWidth="2"
-              >
-                <circle cx="12" cy="12" r="1" />
-                <circle cx="12" cy="6" r="1" />
-                <circle cx="12" cy="18" r="1" />
-              </svg>
-            </button>
-            {dropdowns[row._id] && (
-              <div className="absolute mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                <div className="py-1">
-                  <Link
-                    to={`/admin-dashboard/view-employee/${row._id}`} // Updated to navigate to Employee Details
-                    className="flex item-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    <FaEye className="w-4 h-4 text-gray-600 mr-2" /> View
-                  </Link>
-                  <button
-                    onClick={() => handleEdit(row)} 
-                    className="flex item-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    <FaPen className="w-4 h-4 text-gray-600 mr-2" /> Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(row._id)}
-                    className="flex item-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                  >
-                    <FaTrash className="w-4 h-4 text-red-600 mr-2" /> Delete
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        );
-      },
-    },
-  ];
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false); 
+  };
 
   return (
     <div className="p-4">
@@ -162,13 +97,62 @@ const List = () => {
         </Link>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={filteredEmployees}
-        pagination={true}
-        highlightOnHover={true}
-        responsive={true}
-      />
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Employee ID</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Designation</TableCell>
+              <TableCell>Work Email</TableCell>
+              <TableCell>Department</TableCell>
+              <TableCell>Phone No.</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredEmployees.map((row) => (
+              <TableRow key={row._id}>
+                <TableCell>{row._id}</TableCell>
+                <TableCell>{row.fullname}</TableCell>
+                <TableCell>{row.designation}</TableCell>
+                <TableCell>{row.workEmail}</TableCell>
+                <TableCell>{row.dept}</TableCell>
+                <TableCell>{row.phoneNo}</TableCell>
+                <TableCell>
+                  <IconButton onClick={(event) => handleMenuClick(event, row._id)}>
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    anchorEl={anchorEl?.[row._id]}
+                    open={Boolean(anchorEl?.[row._id])}
+                    onClose={handleMenuClose}
+                  >
+                    <MenuItem
+                      component={Link}
+                      to={`/admin-dashboard/view-employee/${row._id}`}
+                      onClick={handleMenuClose}
+                    >
+                      <FaEye className="mr-2" /> View
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => handleEdit(row)}
+                    >
+                      <FaPen className="mr-2" /> Edit
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => openDeleteDialog(row)}
+                      style={{ color: 'red' }}
+                    >
+                      <FaTrash className="mr-2" /> Delete
+                    </MenuItem>
+                  </Menu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       <Drawer
         anchor="right"
@@ -186,6 +170,34 @@ const List = () => {
           />
         )}
       </Drawer>
+
+      <Dialog open={openDialog} onClose={closeDeleteDialog}>
+        <DialogTitle>Are you sure you want to delete this employee?</DialogTitle>
+        <DialogContent>
+          This action cannot be undone.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDeleteDialog} style={{ backgroundColor: '#d3d3d3', color: '#000' }}>
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} style={{ backgroundColor: 'rgb(239, 68, 68)', color: 'white' }}>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message="Employee deleted successfully"
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        sx={{ 
+          backgroundColor: "rgb(39, 174, 96)", 
+          opacity: 0.9, 
+          borderRadius: "4px", 
+        }}
+      />
     </div>
   );
 };

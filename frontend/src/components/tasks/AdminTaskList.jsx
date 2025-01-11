@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Menu, MenuItem, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { Delete as DeleteIcon, Visibility as VisibilityIcon, MoreVert as MoreVertIcon } from '@mui/icons-material';
 
 const tasksData = [
@@ -8,9 +8,9 @@ const tasksData = [
     id: 1,
     taskTitle: 'Fix Bug in Homepage',
     taskDescription: 'Fix the responsive issue on the homepage',
-    department: 'Engineering',
-    teamLead: 'Charlie',
-    label: 'Urgent',
+    department: 'Video',
+    taskType: 'Book Trailer',
+    priority: 'High Priority',
     deadline: '2025-01-15',
   },
   {
@@ -18,8 +18,8 @@ const tasksData = [
     taskTitle: 'Update Marketing Plan',
     taskDescription: 'Update the marketing plan for Q1',
     department: 'Marketing',
-    teamLead: 'Eva',
-    label: 'Pending',
+    taskType: 'Post',
+    priority: 'Low Priority',
     deadline: '2025-01-20',
   },
   // More tasks can be added here
@@ -30,6 +30,8 @@ const TaskList = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handleMenuClick = (event, task) => {
     setAnchorEl(event.currentTarget);
@@ -49,8 +51,8 @@ const TaskList = () => {
   };
 
   const handleView = () => {
-    // Handle view task logic (you can expand this as needed)
-    console.log('Viewing task:', selectedTask);
+    // Navigate to the view task details page, passing the task id in the URL
+    navigate(`/admin-dashboard/view-task/${selectedTask.id}`);
     handleCloseMenu();
   };
 
@@ -85,8 +87,8 @@ const TaskList = () => {
               <TableCell className="py-3 px-6 text-left font-medium">Task Title</TableCell>
               <TableCell className="py-3 px-6 text-left font-medium">Task Description</TableCell>
               <TableCell className="py-3 px-6 text-left font-medium">Department</TableCell>
-              <TableCell className="py-3 px-6 text-left font-medium">Team Lead</TableCell>
-              <TableCell className="py-3 px-6 text-left font-medium">Label</TableCell>
+              <TableCell className="py-3 px-6 text-left font-medium">Task Type</TableCell>
+              <TableCell className="py-3 px-6 text-left font-medium">Priority</TableCell>
               <TableCell className="py-3 px-6 text-left font-medium">Deadline</TableCell>
               <TableCell className="py-3 px-6 text-left font-medium">Actions</TableCell>
             </TableRow>
@@ -101,10 +103,10 @@ const TaskList = () => {
                   {task.taskDescription}
                 </TableCell>
                 <TableCell className="py-3 px-6">{task.department}</TableCell>
-                <TableCell className="py-3 px-6">{task.teamLead}</TableCell>
+                <TableCell className="py-3 px-6">{task.taskType}</TableCell>
                 <TableCell className="py-3 px-6">
-                  <span className={`px-3 py-1 rounded-full text-white ${task.label === 'Urgent' ? 'bg-red-500' : 'bg-yellow-500'}`}>
-                    {task.label}
+                  <span className={`px-3 py-1 rounded-full text-white ${task.priority === 'High Priority' ? 'bg-red-500' : 'bg-yellow-500'}`}>
+                    {task.priority}
                   </span>
                 </TableCell>
                 <TableCell className="py-3 px-6">{task.deadline}</TableCell>
