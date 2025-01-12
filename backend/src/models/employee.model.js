@@ -131,8 +131,9 @@ employeeSchema.methods.generateAccessToken = function () {
     return jwt.sign(
         {
             _id: this._id,
-            email: this.email,
-            role: this.role,
+            email: this.workemail,
+            department: this.department,
+            designation: this.designation
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
