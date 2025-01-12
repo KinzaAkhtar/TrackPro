@@ -4,7 +4,7 @@ import LogoutLogo from '../../assets/LogoutLogoWhite.png';
 import user from '../../assets/user.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Avatar from 'react-avatar';
-import { FaCalendarCheck, FaDollarSign, FaHome, FaTachometerAlt, FaTasks, FaCog } from 'react-icons/fa';
+import { FaCalendarCheck, FaDollarSign, FaHome,FaUserFriends, FaTachometerAlt, FaTasks, FaCog } from 'react-icons/fa';
 
 const TLSidebar = () => {
     const navigate = useNavigate(); // Hook to navigate to the login page
