@@ -1,44 +1,118 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Employee } from "../models/employee.model.js";
+import { Attendance } from "../models/attendance.model.js";
+import { Leaves } from "../models/leave.model.js";
+import { Task } from "../models/task.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
+import jwt from "jsonwebtoken";
 
-export const registerEmployee = asyncHandler(async (req, res) => {
-    const { name, email, password, department, designation, role } = req.body;
 
-    // Validate required fields
-    if ([name, email, password, department, designation].some((field) => !field?.trim())) {
-        throw new ApiError(400, "All fields are required");
+const generateAccessToken = async (userId) => {
+    try {
+        const user = await Employee.findById(userId)
+        const accessToken = user.generateAccessToken()
+        return accessToken
+
+
+    } catch (error) {
+        throw new ApiError(500, "Something went wrong while generating access token")
+    }
+}
+
+const login = asyncHandler(async (req, res) => {
+    console.log(req.body);
+    // req body -> data
+    // username or email
+    //find the user
+    //password check
+    //access and referesh token
+    //send cookie
+
+    const { workemail, password } = req.body
+    console.log(workemail);
+
+    if (!workemail) {
+        throw new ApiError(400, "email is required")
+    }
+    if (workemail == "admin@trackpro.com") {
+        if (password != "12345") {
+            throw new ApiError(400, "Invalid correct")
+        }
+        else {
+            //login admin and return
+            // const access_token = jwt.sign(
+            //     {
+            //         _id: "admin",
+            //         email: "admin@trackpro.com",
+            //     },
+            //     process.env.ACCESS_TOKEN_SECRET,
+            //     {
+            //         expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+            //     }
+            // );
+
+            return res.
+                status(201).
+                json(
+                    new ApiResponse(201,
+                        {
+                            user: {
+                                role: "admin",
+                                name: "Guest",
+                                email: "guest@example.com",
+                            }
+                        },
+                        "Admin login succesfully")
+                );
+        };
+
     }
 
-    // Check if email already exists
-    const existingEmployee = await Employee.findOne({ email });
-    if (existingEmployee) {
-        throw new ApiError(409, "Employee with this email already exists");
+    const user = await Employee.findOne({
+        $or: [{ workemail }]
+    })
+
+    if (!user) {
+        throw new ApiError(404, "Invalid email")
     }
 
-    // Create a new employee
-    const employee = await Employee.create({
-        name,
-        email: email.toLowerCase(),
-        password,
-        department,
-        designation,
-        role: role || "Employee",
-    });
+    const isPasswordValid = await user.isPasswordCorrect(password)
 
-    // Fetch employee without sensitive data
-    const createdEmployee = await Employee.findById(employee._id).select(
-        "-password -refreshToken"
-    );
+    if (!isPasswordValid) {
+        throw new ApiError(401, "Invalid password")
+    }
+    const accessToken = await generateAccessToken(user._id)
 
-    if (!createdEmployee) {
-        throw new ApiError(500, "Something went wrong while registering the employee");
+    const loggedInUser = await Employee.findById(user._id).select("-password -refreshToken")
+
+    const options = {
+        httpOnly: true,
+        secure: true
     }
 
-    return res.status(201).json(
-        new ApiResponse(201, createdEmployee, "Employee registered successfully")
-    );
-});
+    return res
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .json(
+            new ApiResponse(
+                200,
+                { accessToken, user: loggedInUser },
+                "Logged In Successfully"
+            )
+        )
+})
 
-export { registerUser }
+const logout = asyncHandler(async (req, res) => {
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    return res
+        .status(200)
+        .clearCookie("accessToken", options)
+        .json(new ApiResponse(200, {}, "User logged Out"))
+})
+
+export { login, logout }

@@ -1,312 +1,312 @@
 /* Kanban Board Styles */
 .kanban-board {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  background-color: #f4f4f4;
-  min-height: 100vh;
-}
-
-/* Columns */
-.kanban-column {
-  flex: 1;
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.column-header {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 18px;
-  font-weight: bold;
-  color: #333333;
-}
-
-/* Tasks */
-.kanban-task {
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.kanban-task:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.task-title {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #333333;
-}
-
-.task-labels {
-  display: flex;
-  gap: 5px;
-}
-
-.task-label {
-  padding: 5px 10px;
-  border-radius: 4px;
-  font-size: 12px;
-  color: #ffffff;
-  font-weight: bold;
-}
-
-.task-label.urgent {
-  background-color: #ff4d4f;
-}
-
-.task-label.pending {
-  background-color: #ffa500;
-}
-
-.task-label.blocked {
-  background-color: #007bff;
-}
-
-/* Task Color Based on Status */
-.kanban-task.to-do {
-  background-color: #f8d7da; /* Light Red */
-}
-
-.kanban-task.in-progress {
-  background-color: #fff3cd; /* Light Yellow */
-}
-
-.kanban-task.completed {
-  background-color: #d1ecf1; /* Light Blue */
-}
-
-.kanban-task.evaluated {
-  background-color: #d4edda; /* Light Green */
-}
-
-/* Popup */
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.popup {
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  max-width: 800px;
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.popup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  width: 100%;
-}
-
-.popup-header h2 {
-  margin: 0;
-  font-size: 24px;
-  font-weight: bold;
-  color: #333333;
-}
-
-.close-button {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #333333;
-}
-
-.popup-content {
-  display: flex;
-  gap: 20px;
-  max-height: 70vh; /* Limit the height of the popup content */
-  overflow-y: auto; /* Enable scrolling if the content overflows */
-}
-
-.left-section {
-  flex: 1;
-  max-width: 50%;
-}
-
-.right-section {
-  flex: 1;
-  max-width: 50%;
-  max-height: 400px; /* Set a maximum height for the right section */
-  overflow-y: auto;
-}
-
-/* Section Titles */
-h4 {
-  font-size: 16px;
-  margin-bottom: 10px;
-  font-weight: bold;
-  color: #333333;
-}
-
-p {
-  font-size: 14px;
-  color: #555555;
-}
-
-textarea {
-  width: 100%;
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
-  font-size: 14px;
-  height: 100px;
-}
-
-.return-task-section {
-  margin-top: 10px;
-}
-
-.return-button {
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.return-button:hover {
-  background-color: #0056b3;
-}
-
-.comment-input {
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  font-size: 14px;
-  margin-top: 10px;
-}
-
-.dropdown {
-  width: 100%;
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  font-size: 14px;
-}
-
-.file-list {
-  list-style: none;
-  padding-left: 0;
-}
-
-.file-list li {
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-
-.file-list li a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-.file-list li a:hover {
-  text-decoration: underline;
-}
-
-.comments-section {
-  margin-top: 20px;
-}
-
-.comment {
-  background-color: #f4f4f4;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-
-.comment p {
-  margin: 5px 0;
-}
-
-.comment-files {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-.comment-files li {
-  margin-top: 5px;
-}
-
-.comment-file-input {
-  margin-top: 10px;
-}
-
-.comment-input {
-  width: 100%;
-  height: 80px;
-  margin-top: 10px;
-}
-
-.return-button {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.return-button:hover {
-  background-color: #0056b3;
-}
-.popup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-bottom: 1px solid #ccc;
-}
-
-.popup-header h2 {
-  margin: 0;
-}
-
-.close-button {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.save-changes-button {
-  background-color: #EF4444;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.save-changes-button:hover {
-  background-color: #b81515;
-}
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f4f4f4;
+    min-height: 100vh;
+  }
+  
+  /* Columns */
+  .kanban-column {
+    flex: 1;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .column-header {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333333;
+  }
+  
+  /* Tasks */
+  .kanban-task {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .kanban-task:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .task-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333333;
+  }
+  
+  .task-labels {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .task-label {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #ffffff;
+    font-weight: bold;
+  }
+  
+  .task-label.urgent {
+    background-color: #ff4d4f;
+  }
+  
+  .task-label.pending {
+    background-color: #ffa500;
+  }
+  
+  .task-label.blocked {
+    background-color: #007bff;
+  }
+  
+  /* Task Color Based on Status */
+  .kanban-task.to-do {
+    background-color: #f8d7da; /* Light Red */
+  }
+  
+  .kanban-task.in-progress {
+    background-color: #fff3cd; /* Light Yellow */
+  }
+  
+  .kanban-task.completed {
+    background-color: #d1ecf1; /* Light Blue */
+  }
+  
+  .kanban-task.evaluated {
+    background-color: #d4edda; /* Light Green */
+  }
+  
+  /* Popup */
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .popup {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .popup-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333;
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333333;
+  }
+  
+  .popup-content {
+    display: flex;
+    gap: 20px;
+    max-height: 70vh; /* Limit the height of the popup content */
+    overflow-y: auto; /* Enable scrolling if the content overflows */
+  }
+  
+  .left-section {
+    flex: 1;
+    max-width: 50%;
+  }
+  
+  .right-section {
+    flex: 1;
+    max-width: 50%;
+    max-height: 400px; /* Set a maximum height for the right section */
+    overflow-y: auto;
+  }
+  
+  /* Section Titles */
+  h4 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333333;
+  }
+  
+  p {
+    font-size: 14px;
+    color: #555555;
+  }
+  
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    font-size: 14px;
+    height: 100px;
+  }
+  
+  .return-task-section {
+    margin-top: 10px;
+  }
+  
+  .return-button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .return-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .comment-input {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  
+  .dropdown {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+  }
+  
+  .file-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .file-list li {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  
+  .file-list li a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .file-list li a:hover {
+    text-decoration: underline;
+  }
+  
+  .comments-section {
+    margin-top: 20px;
+  }
+  
+  .comment {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .comment p {
+    margin: 5px 0;
+  }
+  
+  .comment-files {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .comment-files li {
+    margin-top: 5px;
+  }
+  
+  .comment-file-input {
+    margin-top: 10px;
+  }
+  
+  .comment-input {
+    width: 100%;
+    height: 80px;
+    margin-top: 10px;
+  }
+  
+  .return-button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .return-button:hover {
+    background-color: #0056b3;
+  }
+  .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .popup-header h2 {
+    margin: 0;
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .save-changes-button {
+    background-color: #EF4444;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .save-changes-button:hover {
+    background-color: #b81515;
+  }

@@ -9,4 +9,4 @@ const leaveSchema = new mongoose.Schema({
     leave_type: { type: String },
 }, { timestamps: true });
 
-export const Attendance = mongoose.model('Attendance', attendanceSchema);
+export const Leaves = mongoose.model('leaves', leaveSchema);

@@ -24,6 +24,9 @@ import EmployeeAttendance from "./components/attendmanage/EmployeeAttendance";
 import AdminTaskList from "./components/tasks/AdminTaskList";
 import CreateTask from "./components/tasks/CreateTask";
 import TLPerformance from "./components/dashboard/TLPerformance"
+import TLTeamList from "./components/teammanagement/TLTeamList"
+import TaskList from "./components/teammanagement/TLTaskList"
+import EmployeePerformance from "./components/teammanagement/EmployeePerformance"
 import AdminViewTask from "./components/tasks/AdminViewTask"
 
 function App() { 
@@ -68,6 +71,9 @@ function App() {
               <Route path="/tl-dashboard/tasks" element={<Tasks/>} />
               <Route path="/tl-dashboard/settings" element={<Settings/>} />
               <Route path="/tl-dashboard/payroll" element={<EmployeePayroll />} />
+              <Route path="/tl-dashboard/team-management" element={<TLTeamList />} />
+              <Route path="/tl-dashboard/team-management/task-list/:id" element={<TaskList />} />
+              <Route path="/tl-dashboard/team-management/track-performance/:id" element={<EmployeePerformance />} />
               <Route path="/tl-dashboard/attendance-and-leaves" element={<EmployeeAttendance />} />
               <Route path="/tl-dashboard/performance-monitoring" element={<TLPerformance />} />
             </Route>
