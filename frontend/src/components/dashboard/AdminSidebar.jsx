@@ -3,7 +3,7 @@ import sidebarLogo from '../../assets/sidebarLogo.png';
 import LogoutLogo from '../../assets/LogoutLogoWhite.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Avatar from 'react-avatar';
-import { FaCalendarCheck, FaDollarSign, FaHome, FaUserFriends, FaTachometerAlt, FaCog } from 'react-icons/fa';
+import { FaCalendarCheck, FaDollarSign,FaTasks, FaHome, FaUserFriends, FaTachometerAlt, FaCog } from 'react-icons/fa';
 import axios from 'axios';
 
 const AdminSidebar = () => {
