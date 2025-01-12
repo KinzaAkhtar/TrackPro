@@ -20,10 +20,10 @@ const KanbanBoard = () => {
       id: 1,
       title: "Design Wireframes",
       description: "Create initial wireframes for the homepage.",
-      assignedBy: "John Doe",
+      assignedTo: "John Doe",
       deadline: "2025-01-10",
       status: "To Do",
-      labels: ["Urgent"],
+      priority: ["High"],
       files: ["wireframes.zip", "homepage-sketch.png"],
       comments: [],
       rating: null, // Add a field for rating
