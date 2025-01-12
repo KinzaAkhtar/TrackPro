@@ -14,6 +14,8 @@ ChartJS.register(CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcEl
 const AdminSummary = () => {
   const [employeeCount, setEmployeeCount] = React.useState(0);
   console.log("Employee Count in AdminSummary:", employeeCount); // Check if the count is passed correctly
+  const [taskCount, setTaskCount] = React.useState(0);
+  console.log("Task Count in AdminSummary:", taskCount); // Check if the count is passed correctly
 
   
   const employeeOfTheMonth = "John Doe"; // Best KPI employee
@@ -31,7 +33,7 @@ const AdminSummary = () => {
       bgColor: "bg-yellow-500/70" 
     },
     { title: "Present Employees (Today)", value: 45,  bgColor: "bg-yellow-500/70"  },
-    { title: "Total Tasks", value: 100,  bgColor: "bg-yellow-500/70"  },
+    { title: "Total Tasks", value: `${taskCount}`,  bgColor: "bg-yellow-500/70"  },
   ];
   useEffect(() => {
     const fetchHeadcount = async () => {
@@ -71,6 +73,26 @@ const AdminSummary = () => {
   };
 
   fetchCount();
+}, []);
+
+ // Fetch task count
+ useEffect(() => {
+  const fetchTaskCount = async () => {
+    try {
+      const response = await axios.get('/api/v1/admin/gettaskcount');
+      console.log("API Response:", response.data); // Log the full response
+      
+      // Assuming the API returns the count inside response.data (like `data: 12`)
+      const { data: taskCount } = response.data; // Extract employee count
+      
+      setTaskCount(taskCount);  // Set the employee count
+      setLoading(false);  // Set loading to false after data is fetched
+    } catch (error) {
+      console.error("Error fetching employee count:", error);
+    }
+  };
+
+  fetchTaskCount();
 }, []);
 
     // Department-wise employee distribution chart data
