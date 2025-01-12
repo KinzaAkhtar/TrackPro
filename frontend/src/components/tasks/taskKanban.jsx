@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./KanbanBoard.css";
 
+// The onDragStart and onDrop functions remain unchanged
 const onDragStart = (e, task) => {
   e.dataTransfer.setData("taskId", task.id);
 };
@@ -24,7 +25,8 @@ const KanbanBoard = () => {
       status: "To Do",
       labels: ["Urgent"],
       files: ["wireframes.zip", "homepage-sketch.png"],
-      comments: [], // Array to store task comments
+      comments: [],
+      rating: null, // Add a field for rating
     },
     {
       id: 2,
@@ -35,7 +37,8 @@ const KanbanBoard = () => {
       status: "In Progress",
       labels: ["Pending"],
       files: ["api-docs.pdf", "auth-module.js"],
-      comments: [], // Array to store task comments
+      comments: [],
+      rating: null,
     },
   ]);
 
@@ -45,6 +48,8 @@ const KanbanBoard = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [comment, setComment] = useState("");
   const [commentFiles, setCommentFiles] = useState([]);
+  const [ratingModalVisible, setRatingModalVisible] = useState(false);
+  const [ratingValue, setRatingValue] = useState(1); // Rating state (1 to 5)
 
   const updateTaskStatus = (status) => {
     const updatedTask = { ...selectedTask, status };
@@ -73,7 +78,7 @@ const KanbanBoard = () => {
       };
       
       setTasks(tasks.map((task) => (task.id === selectedTask.id ? updatedTask : task)));
-      setSelectedTask(updatedTask); // Update the selected task to reflect the new comment
+      setSelectedTask(updatedTask);
       setComment("");
       setCommentFiles([]);
     }
@@ -85,9 +90,30 @@ const KanbanBoard = () => {
 
   const saveChanges = () => {
     alert("Changes saved!");
-    // Implement saving functionality (e.g., send data to a server)
     closePopup(); // Close the modal after saving
   };
+
+  const openRatingModal = () => {
+    setRatingModalVisible(true);
+  };
+
+  const closeRatingModal = () => {
+    setRatingModalVisible(false);
+  };
+
+  const submitRating = () => {
+    const updatedTask = {
+      ...selectedTask,
+      status: "Evaluated",  // Set the task status to 'Evaluated'
+      rating: ratingValue,  // Save the selected rating
+    };
+  
+    // Update the tasks state with the updated task
+    setTasks(tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)));
+    setSelectedTask(updatedTask); // Update the selected task to reflect the new status and rating
+    setRatingModalVisible(false); // Close the rating modal
+  };
+  
 
   return (
     <div className="kanban-board">
@@ -105,11 +131,16 @@ const KanbanBoard = () => {
               <div
                 key={task.id}
                 className={`kanban-task ${task.status.toLowerCase().replace(" ", "-")}`}
-                draggable
+                draggable={task.status !== "Evaluated"}
                 onDragStart={(e) => onDragStart(e, task)}
                 onClick={() => setSelectedTask(task)}
               >
                 <div className="task-title">{task.title}</div>
+                {task.rating && (
+                  <div className="task-rating">
+                    Rating: {task.rating}
+                  </div>
+                )}
                 <div className="task-labels">
                   {task.labels.map((label, index) => (
                     <span key={index} className={`task-label ${label.toLowerCase()}`}>
@@ -130,7 +161,6 @@ const KanbanBoard = () => {
               <button className="close-button" onClick={closePopup}>
                 ✖
               </button>
-             
             </div>
             <div className="popup-content">
               <div className="left-section">
@@ -156,6 +186,7 @@ const KanbanBoard = () => {
                   value={selectedTask.status}
                   onChange={(e) => updateTaskStatus(e.target.value)}
                   className="dropdown"
+                  disabled={selectedTask.status === "Evaluated"}
                 >
                   {statuses.map((status) => (
                     <option key={status} value={status}>
@@ -163,6 +194,15 @@ const KanbanBoard = () => {
                     </option>
                   ))}
                 </select>
+
+                {selectedTask.rating && (
+                <div className="task-rating">
+                  <h4>Rating</h4>
+                  <p>{selectedTask.rating}</p>
+                </div>
+              )}
+
+
                 <h4>Assigned To</h4>
                 <select
                   value={selectedTask.assignedTo}
@@ -179,11 +219,16 @@ const KanbanBoard = () => {
                     </option>
                   ))}
                 </select>
+
+                {/* Only show Evaluate button if status is 'Completed' */}
+                {selectedTask.status === "Completed" && (
+                  <button className="evaluate-button" onClick={openRatingModal}>
+                    Evaluate
+                  </button>
+                )}
               </div>
 
               <div className="right-section">
-               
-
                 <h4>Comments</h4>
                 <div className="comments-section">
                   {selectedTask.comments.map((comment, index) => (
@@ -222,9 +267,40 @@ const KanbanBoard = () => {
                 </button>
               </div>
             </div>
-              <button className="save-changes-button" onClick={saveChanges}>
-                Save Changes
+            <button className="save-changes-button" onClick={saveChanges}>
+              Save Changes
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Rating Modal */}
+      {ratingModalVisible && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <div className="popup-header">
+              <h2>Rate this Task</h2>
+              <button className="close-button" onClick={closeRatingModal}>
+                ✖
               </button>
+            </div>
+            <div className="popup-content">
+              <h4>Select a rating (1 to 5):</h4>
+              <div className="rating-options">
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <button
+                    key={value}
+                    className={`rating-button ${value === ratingValue ? "selected" : ""}`}
+                    onClick={() => setRatingValue(value)}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
+              <button className="save-rating-button" onClick={submitRating}>
+                Save Rating
+              </button>
+            </div>
           </div>
         </div>
       )}
