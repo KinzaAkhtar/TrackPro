@@ -4,7 +4,6 @@ import { Task } from "../models/task.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
-import { upload } from "../middlewares/multer.middleware.js";
 import { getTimeAsDate } from "../utils/TimeAsDate.js"
 
 
@@ -214,8 +213,25 @@ const deleteTask = asyncHandler(async (req, res) => {
             .json(new ApiResponse(500, "Failed to delete employee"))
     }
 });
+const getLeaves = asyncHandler(async (req, res) => {
+    try {
+        // console.log(req.body)
+        // const task = await Task.findByIdAndDelete(req.body.taskId);
+
+        // if (!task) {
+        //     return res.status(404).json(new ApiResponse(404, 'Employee not found'));
+        // }
+        // return res
+        //     .status(201)
+        //     .json(new ApiResponse(201, "delete successfully"))
+    } catch (error) {
+        return res
+            .status(500)
+            .json(new ApiResponse(500, "Failed to get leave data"))
+    }
+});
 
 
 
 
-export { AddEmployee, getEmployee, createtask, gettasks, deleteEmployee, deleteTask }
+export { AddEmployee, getEmployee, createtask, gettasks, deleteEmployee, deleteTask, getLeaves }

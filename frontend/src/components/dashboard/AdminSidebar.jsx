@@ -4,14 +4,28 @@ import LogoutLogo from '../../assets/LogoutLogoWhite.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Avatar from 'react-avatar';
 import { FaCalendarCheck, FaDollarSign, FaHome, FaUserFriends, FaTachometerAlt, FaCog } from 'react-icons/fa';
+import axios from 'axios';
 
 const AdminSidebar = () => {
     const navigate = useNavigate(); // Hook to navigate to the login page
 
     // Function to handle logout and redirect to login
-    const handleLogout = () => {
-        // You can add any logout logic here (e.g., clear local storage, etc.)
-        navigate('/login'); // Redirect to the login page 
+    const handleLogout = async () => {
+        try {
+            // Call the backend to clear the HttpOnly cookie
+            const response = await axios.post('/api/v1/user/logout');
+            if (response.data.success) {
+                console.log(response.data.message);
+            }
+
+            // Clear any additional client-side storage
+            localStorage.clear();
+
+            // Redirect the user to the login page
+            navigate('/login');
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
     };
 
     return (
@@ -20,10 +34,10 @@ const AdminSidebar = () => {
                 <img src={sidebarLogo} alt="Image 1" className="w-25 mt-2" />
             </div>
             <div className="bg-white bg-opacity-30 p-4 rounded-lg shadow-lg backdrop-blur-lg max-w-xs mx-auto flex justify-center items-center mt-4">
-                <Avatar name="Madiha Aftab" size="40" round={true} />
+                <Avatar name="avatar" size="40" round={true} />
                 <div className="profileContent">
-                    <p className="name ml-4 text-sm">Madiha Aftab</p>
-                    <p className="name ml-4 text-sm">madiha@gmail.com</p>
+                    <p className="name ml-4 text-sm">Username here</p>
+                    <p className="name ml-4 text-sm">username@gmail.com</p>
                 </div>
             </div>
             <div className="mt-8">
@@ -51,11 +65,11 @@ const AdminSidebar = () => {
                     <FaCog className="mr-2" />
                     <span>Settings</span>
                 </NavLink>
-                
+
             </div>
             <div className="absolute bottom-4 left-4">
                 <img src={LogoutLogo} alt="Logout" className="h-auto max-w-40" />
-                
+
                 {/* Logout Button */}
                 <button
                     onClick={handleLogout}

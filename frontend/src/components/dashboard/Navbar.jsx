@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import InputBase from "@mui/material/InputBase";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -8,6 +8,8 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
+
+
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -56,23 +58,23 @@ const Navbar = () => {
           horizontal: "right",
         }}
       >
-        
+
         <MenuItem onClick={handleMenuClose}>
           <PersonOutlinedIcon sx={{ mr: 1 }} />
           <Typography>My Profile</Typography>
-          
+
         </MenuItem>
 
         <MenuItem onClick={handleMenuClose}>
           <SettingsOutlinedIcon sx={{ mr: 1 }} />
           <Typography>Settings</Typography>
-          
+
         </MenuItem>
         <MenuItem onClick={handleMenuClose}>
-        <NavLink to="/login" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-left  rounded-lg`} end>
+          <NavLink to="/login" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-left  rounded-lg`} end>
 
-          <LogoutIcon sx={{ mr: 1 }} />
-          <Typography>Logout</Typography>
+            <LogoutIcon sx={{ mr: 1 }} />
+            <Typography>Logout</Typography>
           </NavLink>
         </MenuItem>
       </Menu>
