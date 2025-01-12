@@ -4,7 +4,6 @@ import { Task } from "../models/task.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
-import { upload } from "../middlewares/multer.middleware.js";
 import { getTimeAsDate } from "../utils/TimeAsDate.js"
 
 
@@ -214,8 +213,70 @@ const deleteTask = asyncHandler(async (req, res) => {
             .json(new ApiResponse(500, "Failed to delete employee"))
     }
 });
+const getLeaves = asyncHandler(async (req, res) => {
+    try {
+        // console.log(req.body)
+        // const task = await Task.findByIdAndDelete(req.body.taskId);
+
+        // if (!task) {
+        //     return res.status(404).json(new ApiResponse(404, 'Employee not found'));
+        // }
+        // return res
+        //     .status(201)
+        //     .json(new ApiResponse(201, "delete successfully"))
+    } catch (error) {
+        return res
+            .status(500)
+            .json(new ApiResponse(500, "Failed to get leave data"))
+    }
+});
+
+const getcount = asyncHandler(async (req, res) => {
+    try {
+        // Count the number of employees
+        const employeeCount = await Employee.countDocuments();
+
+        return res
+            .status(200)
+            .json(new ApiResponse(200, employeeCount, "Employee count fetched successfully"));
+    } catch (error) {
+        return res
+            .status(500)
+            .json(new ApiResponse(500, "Failed to fetch employee count"));
+    }
+});
+const gettaskcount = asyncHandler(async (req, res) => {
+    try {
+        // Count the number of employees
+        const taskCount = await Task.countDocuments();
+
+        return res
+            .status(200)
+            .json(new ApiResponse(200, taskCount, "Task count fetched successfully"));
+    } catch (error) {
+        return res
+            .status(500)
+            .json(new ApiResponse(500, "Failed to fetch task count"));
+    }
+});
 
 
+const getheadcount = asyncHandler(async (req, res) => {
+    try {
+        // Count the number of male employees
+        const maleCount = await Employee.countDocuments({ gender: 'Male' });
 
+        // Count the number of female employees
+        const femaleCount = await Employee.countDocuments({ gender: 'Female' });
 
-export { AddEmployee, getEmployee, createtask, gettasks, deleteEmployee, deleteTask }
+        return res
+            .status(200)
+            .json(new ApiResponse(200, { maleCount, femaleCount }, "Employee gender headcount fetched successfully"));
+    } catch (error) {
+        return res
+            .status(500)
+            .json(new ApiResponse(500, "Failed to fetch employee gender headcount"));
+    }
+});
+
+export { AddEmployee, getEmployee, createtask, gettasks, deleteEmployee, deleteTask, getLeaves, getcount, getheadcount, gettaskcount }

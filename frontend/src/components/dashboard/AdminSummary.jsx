@@ -1,8 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, {useEffect} from "react";
+import { Link, useOutletContext } from "react-router-dom";
 import { Card, CardContent, Typography, Grid, Box } from "@mui/material";
 import { Doughnut, Line, Bar, Pie } from "react-chartjs-2";
 import {Chart as ChartJS,CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcElement,PointElement,LineElement,} from "chart.js";
+import axios from "axios"; // If using axios
+
 import List from '../employee/List';
 
 
@@ -10,15 +12,38 @@ import List from '../employee/List';
 ChartJS.register(CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcElement,PointElement,LineElement);
 
 const AdminSummary = () => {
-  const cardData = [
-    { title: "Total Employees", value: 50, bgColor: "bg-yellow-500/70"  },
-    { title: "Headcount: Male/Female", value: "15/20",  bgColor: "bg-yellow-500/70"  },
-    { title: "Present Employees (Today)", value: 45,  bgColor: "bg-yellow-500/70"  },
-    { title: "Total Tasks", value: 100,  bgColor: "bg-yellow-500/70"  },
+  const { employeeCount, setEmployeeCount } = useOutletContext();
+  console.log("Employee Count in AdminSummary:", employeeCount); // Check if the count is passed correctly
 
-  ];
+  
   const employeeOfTheMonth = "John Doe"; // Best KPI employee
   const departmentOfTheMonth = "Design"; // Best department with more completed task
+  const [maleCount, setMaleCount] = React.useState(0);
+  const [femaleCount, setFemaleCount] = React.useState(0);
+  
+  const cardData = [
+    { title: "Total Employees", value:  employeeCount, bgColor: "bg-yellow-500/70"  },
+    { title: "Headcount: Male/Female", value: `${maleCount}/${femaleCount}`,  bgColor: "bg-yellow-500/70"  },
+    { title: "Present Employees (Today)", value: 45,  bgColor: "bg-yellow-500/70"  },
+    { title: "Total Tasks", value: 100,  bgColor: "bg-yellow-500/70"  },
+  ];
+  useEffect(() => {
+    const fetchHeadcount = async () => {
+        try {
+            const response = await axios.get('/api/v1/admin/getheadcount'); // Your API endpoint here
+            const { male, female } = response.data; // Assuming the response data has male and female properties
+
+            setMaleCount(male);
+            setFemaleCount(female);
+        } catch (error) {
+            console.error("Error fetching headcount data:", error);
+        }
+    };
+
+    fetchHeadcount();
+}, []);
+
+  
 
     // Department-wise employee distribution chart data
     const departmentData = {

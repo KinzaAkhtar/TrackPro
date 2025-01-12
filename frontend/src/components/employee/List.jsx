@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link,useOutletContext  } from "react-router-dom";
 import { FaEye, FaPen, FaTrash } from "react-icons/fa";
 import axios from "axios"; // Ensure axios is imported
 import EditEmployee from "./EditEmployee";
@@ -25,6 +25,7 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const List = () => {
+  const { setEmployeeCount } = useOutletContext(); // Access the context
   const [employees, setEmployees] = useState([]); // Initialize with an empty array
   const [search, setSearch] = useState("");
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -39,15 +40,29 @@ const List = () => {
       try {
         const response = await axios.get("/api/v1/admin/getemployees");
         console.log("Fetched Employees:", response.data);
-        setEmployees(response.data.data || []); // Use `data` field from the response
+        
+        const fetchedEmployees = response.data.data || [];
+        setEmployees(fetchedEmployees);
+        console.log('setEmployeeCount:', setEmployeeCount);
+
+        // Update employee count after data is fetched
+        if (setEmployeeCount) {
+          setEmployeeCount(fetchedEmployees.length);
+          console.log("Employee count updated in List:", fetchedEmployees.length);
+        }
+        
         setLoading(false);
       } catch (error) {
         console.error("Error:", error.message);
         setLoading(false);
       }
     };
+  
     fetchEmployees();
-  }, []); // Empty dependency array ensures it runs once on component mount
+  }, [setEmployeeCount]);  // Dependencies remain the same
+  
+  
+   
 
   const handleSearch = (event) => {
     setSearch(event.target.value);
@@ -146,6 +161,7 @@ const List = () => {
                 <TableCell>Work Email</TableCell>
                 <TableCell>Department</TableCell>
                 <TableCell>Phone No.</TableCell>
+                <TableCell>Salary</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -158,6 +174,7 @@ const List = () => {
                   <TableCell>{row.workemail}</TableCell>
                   <TableCell>{row.department}</TableCell>
                   <TableCell>{row.phoneno}</TableCell>
+                  <TableCell>{row.salary}</TableCell>
                   <TableCell>
                     <IconButton onClick={(event) => handleMenuClick(event, row._id)}>
                       <MoreVertIcon />
