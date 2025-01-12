@@ -41,23 +41,22 @@ const login = asyncHandler(async (req, res) => {
         }
         else {
             //login admin and return
-            const access_token = jwt.sign(
-                {
-                    _id: "admin",
-                    email: "admin@trackpro.com",
-                },
-                process.env.ACCESS_TOKEN_SECRET,
-                {
-                    expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-                }
-            );
+            // const access_token = jwt.sign(
+            //     {
+            //         _id: "admin",
+            //         email: "admin@trackpro.com",
+            //     },
+            //     process.env.ACCESS_TOKEN_SECRET,
+            //     {
+            //         expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+            //     }
+            // );
 
             return res.
                 status(201).
                 json(
                     new ApiResponse(201,
                         {
-                            access_token,
                             user: {
                                 role: "admin",
                                 name: "Guest",

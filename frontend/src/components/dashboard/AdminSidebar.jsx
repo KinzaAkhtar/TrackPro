@@ -58,7 +58,7 @@ const AdminSidebar = () => {
                     <span>Payroll</span>
                 </NavLink>
                 <NavLink to="/admin-dashboard/tasks" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
-                    <FaTasks className="mr-2"/>
+                    <FaTasks className="mr-2" />
                     <span>Task Management</span>
                 </NavLink>
                 <NavLink to="/admin-dashboard/settings" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>

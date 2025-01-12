@@ -4,7 +4,7 @@ import LogoutLogo from '../../assets/LogoutLogoWhite.png';
 import user from '../../assets/user.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Avatar from 'react-avatar';
-import { FaCalendarCheck, FaDollarSign, FaHome, FaTachometerAlt, FaTasks, FaCog } from 'react-icons/fa';
+import { FaCalendarCheck, FaDollarSign, FaHome, FaTachometerAlt, FaTasks, FaCog, FaUserFriends } from 'react-icons/fa';
 
 const TLSidebar = () => {
     const navigate = useNavigate(); // Hook to navigate to the login page
@@ -55,7 +55,7 @@ const TLSidebar = () => {
                     <span>Payroll</span>
                 </NavLink>
                 <NavLink to="/tl-dashboard/team-management" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
-                    <FaUserFriends className="mr-2"/>
+                    <FaUserFriends className="mr-2" />
                     <span>Team Management</span>
                 </NavLink>
                 <NavLink to="/tl-dashboard/tasks" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
