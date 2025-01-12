@@ -1,17 +1,14 @@
-import React, { useState, useMemo } from 'react';
-import axios from 'axios'; // Ensure you install axios: npm install axios
-import { TextField, MenuItem, Button, Select, InputLabel, FormControl, Snackbar, Alert } from '@mui/material';
+import React, { useState, useMemo, useEffect } from 'react';
+import axios from 'axios';
+import { TextField, MenuItem, Button, Select, InputLabel, FormControl, Snackbar, Alert, FormHelperText } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-import { format } from 'date-fns'; // To format the date for display
-import { useNavigate } from "react-router-dom";
-import { WebStories } from '@mui/icons-material';
-
-
+import { format } from 'date-fns'; 
+import { useNavigate } from 'react-router-dom';
 
 // Dummy Data for Departments and task type
 const departments = ['EBook', 'Marketing', 'ContentWriting', 'WebDevelopment', 'Design', 'Publication', 'Outsourcing', 'Video'];
-const TaskType= {
+const TaskType = {
   EBook: ['Editing/ProofReading', 'Ghost Writing'],
   Marketing: ['Post', 'SEO', 'SMM Calendar'],
   ContentWriting: ['SMM content','Articles','Press release','Blog','Web content'],
@@ -31,23 +28,16 @@ const TaskForm = () => {
   const [deadline, setDeadline] = useState(null);
   const [attachment, setAttachment] = useState(null);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [navigateAfterSnackbar, setNavigateAfterSnackbar] = useState(false);
+
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
-    const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-    const [navigateAfterSnackbar, setNavigateAfterSnackbar] = useState(false);
-
-  // Handle file attachment change
-  const handleFileChange = (e) => {
-    setAttachment(e.target.files[0]);
-  };
-
-  // Memoized team lead options based on selected department
   const taskTypeOptions = useMemo(() => TaskType[selectedDepartment] || [], [selectedDepartment]);
 
-  // Validation function to check if the required fields are filled
   const validateForm = () => {
     const newErrors = {};
     if (!taskTitle) newErrors.taskTitle = 'Task Title is required';
@@ -55,18 +45,17 @@ const TaskForm = () => {
     if (!selectedDepartment) newErrors.selectedDepartment = 'Department is required';
     if (!selectedTaskType) newErrors.selectedTaskType = 'Task Type is required';
     if (!selectedPriority) newErrors.selectedPriority = 'Priority is required';
+    if (!deadline) newErrors.deadline = 'Deadline is required';
     return newErrors;
   };
 
   const handleSubmit = async () => {
-    const formErrors = validateForm();  // Validate the form first
-    setErrors(formErrors);  // Update error state
-    if (Object.keys(formErrors).length > 0) return;  // Stop if there are validation errors
-  
-    // Set loading state after validation passes
+    const formErrors = validateForm();
+    setErrors(formErrors);
+    if (Object.keys(formErrors).length > 0) return;
+
     setLoading(true);
-  
-    // Prepare form data
+
     const formData = new FormData();
     formData.append('taskTitle', taskTitle);
     formData.append('taskDescription', taskDescription);
@@ -75,16 +64,17 @@ const TaskForm = () => {
     formData.append('deadline', deadline);
     formData.append('priority', selectedPriority);
     if (attachment) formData.append('attachment', attachment);
-  
+
     try {
       const response = await axios.post('/api/v1/admin/createtask', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
+
       if (response.data.success) {
         setSnackbarMessage("Task created successfully!");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
-        setNavigateAfterSnackbar(true);  // Set flag to navigate after snackbar closes
+        setNavigateAfterSnackbar(true);  // Set to navigate after snackbar is closed
       } else {
         setSnackbarMessage("Something went wrong, please try again.");
         setSnackbarSeverity("error");
@@ -99,42 +89,40 @@ const TaskForm = () => {
       setLoading(false);
     }
   };
-  
 
   const handleCloseSnackbar = () => {
-      setSnackbarOpen(false);
-    };
+    setSnackbarOpen(false);
+  };
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-      
-        // Update the state based on the name of the input field
-        if (name === 'taskTitle') {
-          setTaskTitle(value);
-        } else if (name === 'taskDescription') {
-          setTaskDescription(value);
-        } else if (name === 'selectedDepartment') {
-          setSelectedDepartment(value);
-        } else if (name === 'selectedTaskType') {
-          setSelectedTaskType(value);
-        } else if (name === 'selectedPriority') {
-          setSelectedPriority(value);
-        }
-      
-        // Clear errors when the user starts typing in the respective field
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [name]: '',  // Clear error for the specific field being typed in
-        }));
-        
-        // Effect to navigate after snackbar is closed
-        React.useEffect(() => {
-          if (navigateAfterSnackbar && !snackbarOpen) {
-            navigate("/admin-dashboard/tasks");
-          }
-        }, [snackbarOpen, navigateAfterSnackbar, navigate]);
-      };
-      
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === 'taskTitle') {
+      setTaskTitle(value);
+    } else if (name === 'taskDescription') {
+      setTaskDescription(value);
+    } else if (name === 'selectedDepartment') {
+      setSelectedDepartment(value);
+    } else if (name === 'selectedTaskType') {
+      setSelectedTaskType(value);
+    } else if (name === 'selectedPriority') {
+      setSelectedPriority(value);
+    } else if (name === 'deadline') {
+      setDeadline(value);
+    }
+
+    // Clear errors when the user starts typing in the respective field
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',  // Clear error for the specific field being typed in
+    }));
+  };
+
+  useEffect(() => {
+    if (navigateAfterSnackbar && !snackbarOpen) {
+      navigate("/admin-dashboard/tasks"); // Navigate after snackbar closes
+    }
+  }, [snackbarOpen, navigateAfterSnackbar, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -143,7 +131,7 @@ const TaskForm = () => {
         
         {/* First row: Task Title */}
         <div className='mb-6'>
-            <TextField
+          <TextField
             label="Task Title"
             variant="outlined"
             fullWidth
@@ -152,12 +140,12 @@ const TaskForm = () => {
             onChange={handleInputChange}
             error={!!errors.taskTitle}
             helperText={errors.taskTitle}
-            />
+          />
         </div>
         
         {/* Second row: Task Description */}
         <div>
-            <TextField
+          <TextField
             label="Task Description"
             variant="outlined"
             fullWidth
@@ -168,10 +156,10 @@ const TaskForm = () => {
             rows={4}
             error={!!errors.taskDescription}
             helperText={errors.taskDescription}
-            />
+          />
         </div>
         
-        {/* Third row: Department and Team Lead (adjacent) */}
+        {/* Third row: Department and Task Type */}
         <div className="grid grid-cols-2 gap-6 mb-6 mt-6">
           <FormControl fullWidth>
             <InputLabel>Department</InputLabel>
@@ -211,37 +199,43 @@ const TaskForm = () => {
           </FormControl>
         </div>
 
-        {/* Fourth row: Label and Deadline (adjacent) */}
-        <div className="grid grid-cols-2 gap-6 mb-6">
-          <FormControl fullWidth>
-            <InputLabel>Priority</InputLabel>
-            <Select
-              label="Priority"
-              name="selectedPriority"
-              value={selectedPriority}
-              onChange={handleInputChange}
-            >
-              <MenuItem value="lowPriority">Low Priority</MenuItem>
-              <MenuItem value="mediumPriority">Medium Priority</MenuItem>
-              <MenuItem value="highPriority">High Priority</MenuItem>
-            </Select>
-          </FormControl>
+        {/* Fourth row: Priority and Deadline */}
+<div className="grid grid-cols-2 gap-6 mb-6">
+  <FormControl fullWidth>
+    <InputLabel>Priority</InputLabel>
+    <Select
+      label="Priority"
+      name="selectedPriority"
+      value={selectedPriority}
+      onChange={handleInputChange}
+      error={!!errors.selectedPriority}  // Use correct error prop
+    >
+      <MenuItem value="lowPriority">Low Priority</MenuItem>
+      <MenuItem value="mediumPriority">Medium Priority</MenuItem>
+      <MenuItem value="highPriority">High Priority</MenuItem>
+    </Select>
+    {errors.selectedPriority && <p className="text-red-500 text-sm">{errors.selectedPriority}</p>}
+  </FormControl>
 
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
-              label="Deadline"
-              value={deadline}
-              onChange={(newDeadline) => setDeadline(newDeadline)}
-              renderInput={(params) => (
-                <TextField 
-                  {...params} 
-                  fullWidth 
-                  helperText={deadline ? `Selected date: ${format(deadline, 'MM/dd/yyyy')}` : "Select a deadline"} 
-                />
-              )}
-            />
-          </LocalizationProvider>
-        </div>
+  <FormControl fullWidth error={!!errors.deadline}>  {/* Add error to FormControl */}
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DatePicker
+        label="Deadline"
+        value={deadline}
+        onChange={(newDeadline) => setDeadline(newDeadline)}
+        renderInput={(params) => (
+          <TextField 
+            {...params} 
+            fullWidth 
+            helperText={errors.deadline ? errors.deadline : (deadline ? `Selected date: ${format(deadline, 'MM/dd/yyyy')}` : "Select a deadline")}
+          />
+        )}
+      />
+    </LocalizationProvider>
+    {errors.deadline && <FormHelperText>{errors.deadline}</FormHelperText>} {/* Display error below */}
+  </FormControl>
+</div>
+
 
         {/* Fifth row: Attachments */}
         <div className="mb-6">
@@ -249,35 +243,37 @@ const TaskForm = () => {
           <input
             type="file"
             className="p-2 border border-dashed border-gray-300 rounded-lg w-full"
-            onChange={handleFileChange}
+            onChange={(e) => setAttachment(e.target.files[0])}
             accept=".jpg,.png,.pdf,.docx"
           />
         </div>
 
-        {/* create task button */}
+        {/* Create Task Button */}
         <Button
-            variant="contained"
-            onClick={handleSubmit}
-            disabled={loading}
-            sx={{
-                backgroundColor: "rgb(239, 68, 68)",
-                color: "white",
-            }}
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={loading}
+          sx={{
+            backgroundColor: "rgb(239, 68, 68)",
+            color: "white",
+          }}
         >
-        {loading ? "Creating..." : "Create Task"}
+          {loading ? "Creating..." : "Create Task"}
         </Button>
       </div>
-            <Snackbar
-              open={snackbarOpen}
-              autoHideDuration={null}  // Disable auto-hide
-              onClose={handleCloseSnackbar}
-              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            >
-              <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
-                {snackbarMessage}
-              </Alert>
-            </Snackbar>
-          </div>
+
+      {/* Snackbar to show success or error messages */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={null}  // Disable auto-hide
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+    </div>
   );
 };
 

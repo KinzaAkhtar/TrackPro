@@ -57,11 +57,11 @@ const AdminSidebar = () => {
                     <FaDollarSign className="mr-2" />
                     <span>Payroll</span>
                 </NavLink>
-                <NavLink to="admin-dashboard/performance" className="flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg">
-                    <FaTachometerAlt className="mr-2" />
-                    <span>Performance Monitoring</span>
+                <NavLink to="/admin-dashboard/tasks" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
+                    <FaTasks className="mr-2"/>
+                    <span>Task Management</span>
                 </NavLink>
-                <NavLink to="admin-dashboard/settings" className="flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg">
+                <NavLink to="/admin-dashboard/settings" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
                     <FaCog className="mr-2" />
                     <span>Settings</span>
                 </NavLink>
