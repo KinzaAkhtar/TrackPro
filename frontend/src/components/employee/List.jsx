@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link,useOutletContext  } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FaEye, FaPen, FaTrash } from "react-icons/fa";
 import axios from "axios"; // Ensure axios is imported
 import EditEmployee from "./EditEmployee";
@@ -25,7 +25,7 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const List = () => {
-  const { setEmployeeCount } = useOutletContext(); // Access the context
+
   const [employees, setEmployees] = useState([]); // Initialize with an empty array
   const [search, setSearch] = useState("");
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -40,27 +40,15 @@ const List = () => {
       try {
         const response = await axios.get("/api/v1/admin/getemployees");
         console.log("Fetched Employees:", response.data);
-        
-        const fetchedEmployees = response.data.data || [];
-        setEmployees(fetchedEmployees);
-        console.log('setEmployeeCount:', setEmployeeCount);
-
-        // Update employee count after data is fetched
-        if (setEmployeeCount) {
-          setEmployeeCount(fetchedEmployees.length);
-          console.log("Employee count updated in List:", fetchedEmployees.length);
-        }
-        
+        setEmployees(response.data.data || []); // Use `data` field from the response
         setLoading(false);
       } catch (error) {
         console.error("Error:", error.message);
         setLoading(false);
       }
     };
-  
     fetchEmployees();
-  }, [setEmployeeCount]);  // Dependencies remain the same
-  
+  }, []); // Empty dependency array ensures it runs once on component mount
   
    
 

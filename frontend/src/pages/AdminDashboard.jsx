@@ -5,14 +5,6 @@ import Navbar from "../components/dashboard/Navbar";
 import { Outlet } from "react-router-dom"; // Used to render child components
 
 const AdminDashboard = () => {
-  const [employeeCount, setEmployeeCount] = useState(0); // Initialize state for employee count
-  console.log("Employee Count in AdminDashboard:", employeeCount);
-  const [employees, setEmployees] = useState([]); // Array to store employee data
-
-  const addEmployee = (employee) => {
-    setEmployees((prevEmployees) => [...prevEmployees, employee]);
-    setEmployeeCount((prevCount) => prevCount + 1);
-  };
   
   return (
     <div className="flex">
@@ -21,7 +13,7 @@ const AdminDashboard = () => {
         <Navbar />
         <div className="p-4">
           {/* Pass setEmployeeCount to child components */}
-          <Outlet context={{ employeeCount, setEmployeeCount }} />
+          <Outlet />
         </div>
       </div>
     </div>
