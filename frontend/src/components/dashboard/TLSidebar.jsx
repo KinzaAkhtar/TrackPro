@@ -46,6 +46,10 @@ const TLSidebar = () => {
                     <FaDollarSign className="mr-2"/>
                     <span>Payroll</span>
                 </NavLink>
+                <NavLink to="/tl-dashboard/team-management" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
+                    <FaUserFriends className="mr-2"/>
+                    <span>Team Management</span>
+                </NavLink>
                 <NavLink to="/tl-dashboard/tasks" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
                     <FaTasks className="mr-2"/>
                     <span>Task Management</span>
