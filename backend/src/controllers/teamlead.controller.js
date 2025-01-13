@@ -50,7 +50,7 @@ const getmembers = asyncHandler(async (req, res) => {
         const members = await Employee.find({
             department: userDepartment,
             designation: { $ne: "Team Lead" }, // Exclude "Team Lead"
-        }).select("name"); // Adjust fields as needed
+        }).select("_id name"); // Adjust fields as needed
 
         return res
             .status(200)
