@@ -33,7 +33,7 @@ const AdminSummary = () => {
       bgColor: "bg-yellow-500/70" 
     },
     { title: "Total Tasks", value: loading ? "Loading..." : `${taskCount}`,  bgColor: "bg-yellow-500/70"  }, // Show loading message while data is fetching
-    { title: "Present Employees (Today)", value: 45,  bgColor: "bg-yellow-500/70"  },
+    { title: "Present Employees (Today)", value: 12,  bgColor: "bg-yellow-500/70"  },
   ];
   {/*Get Headcount card data*/}
   useEffect(() => {

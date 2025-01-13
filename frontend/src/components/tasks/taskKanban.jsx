@@ -1,60 +1,103 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./KanbanBoard.css";
 
-// The onDragStart and onDrop functions remain unchanged
-const onDragStart = (e, task) => {
-  e.dataTransfer.setData("taskId", task.id);
-};
-
-const onDrop = (e, status, tasks, setTasks) => {
-  const taskId = e.dataTransfer.getData("taskId");
-  const updatedTasks = tasks.map((task) =>
-    task.id === parseInt(taskId) ? { ...task, status } : task
-  );
-  setTasks(updatedTasks);
-};
-
 const KanbanBoard = () => {
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: "Design Wireframes",
-      description: "Create initial wireframes for the homepage.",
-      assignedTo: "John Doe",
-      deadline: "2025-01-10",
-      status: "To Do",
-      priority: ["High"],
-      files: ["wireframes.zip", "homepage-sketch.png"],
-      comments: [],
-      rating: null, // Add a field for rating
-    },
-    {
-      id: 2,
-      title: "Develop API",
-      description: "Develop RESTful APIs for the backend.",
-      assignedBy: "Jane Smith",
-      deadline: "2025-01-15",
-      status: "In Progress",
-      labels: ["Pending"],
-      files: ["api-docs.pdf", "auth-module.js"],
-      comments: [],
-      rating: null,
-    },
-  ]);
-
-  const statuses = ["To Do", "In Progress", "Completed", "Evaluated"];
-  const members = ["John", "Doe", "Sammy", "Bryan"];
-
+  const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [comment, setComment] = useState("");
   const [commentFiles, setCommentFiles] = useState([]);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
-  const [ratingValue, setRatingValue] = useState(1); // Rating state (1 to 5)
+  const [ratingValue, setRatingValue] = useState(1);
+  const [members, setMembers] = useState([]); // Added members state for dropdown
 
-  const updateTaskStatus = (status) => {
-    const updatedTask = { ...selectedTask, status };
-    setTasks(tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)));
-    setSelectedTask(updatedTask);
+  useEffect(() => {
+    // Fetch tasks from the backend API
+    axios
+      .get("/api/v1/teamlead/gettasks", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then((response) => {
+        const { data, success } = response.data;
+
+        if (success && Array.isArray(data)) {
+          // Map API response to the expected format
+          const formattedTasks = data.map((task) => ({
+            id: task._id,
+            title: task.title,
+            description: task.description,
+            priority: task.priority.replace("Priority", ""), // Adjust "mediumPriority" to "Medium"
+            status:
+              task.status === "TODO"
+                ? "To Do"
+                : task.status === "IN_PROGRESS"
+                ? "In Progress"
+                : task.status === "COMPLETED"
+                ? "Completed"
+                : task.status === "EVALUATED"
+                ? "Evaluated"
+                : task.status, // Map uppercase to readable format
+            deadline: task.deadline,
+            department: task.department || "",
+            tasktype: task.tasktype || "",
+            comments: [], // Add default empty comments array
+            rating: null, // Add default null rating
+            files: [], // Add default empty files array
+          }));
+
+          setTasks(formattedTasks);
+        } else {
+          console.error("Invalid tasks format:", response.data);
+          setTasks([]);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching tasks:", error);
+        setTasks([]); // Handle API errors gracefully
+      });
+
+    // Fetch team members for the dropdown
+    
+      // Fetch team members for the dropdown
+      axios
+        .get("/api/v1/teamlead/getmembers", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        })
+        .then((response) => {
+          const { data, success } = response.data;
+    
+          if (success && Array.isArray(data)) {
+            // Format and set members
+            const formattedMembers = data.map((member) => ({
+              name: typeof member.name === "string" ? member.name : "Unnamed Member",
+            }));
+            setMembers(formattedMembers);
+          } else {
+            console.error("Invalid members format:", response.data);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching members:", error);
+        });
+  }, []);
+    
+
+  const statuses = ["To Do", "In Progress", "Completed", "Evaluated"];
+
+  const onDragStart = (e, task) => {
+    e.dataTransfer.setData("taskId", task.id);
+  };
+
+  const onDrop = (e, status) => {
+    const taskId = e.dataTransfer.getData("taskId");
+    const updatedTasks = tasks.map((task) =>
+      task.id === taskId ? { ...task, status } : task
+    );
+    setTasks(updatedTasks);
   };
 
   const closePopup = () => {
@@ -67,16 +110,16 @@ const KanbanBoard = () => {
     if (comment.trim()) {
       const newComment = {
         text: comment,
-        author: "Current User", // Replace with dynamic user
+        author: "Current User",
         timestamp: new Date().toISOString(),
-        files: commentFiles,
+        files: commentFiles.map((file) => file.name),
       };
-      
+
       const updatedTask = {
         ...selectedTask,
         comments: [...selectedTask.comments, newComment],
       };
-      
+
       setTasks(tasks.map((task) => (task.id === selectedTask.id ? updatedTask : task)));
       setSelectedTask(updatedTask);
       setComment("");
@@ -89,9 +132,46 @@ const KanbanBoard = () => {
   };
 
   const saveChanges = () => {
-    alert("Changes saved!");
-    closePopup(); // Close the modal after saving
+    if (!selectedTask.assignedTo) {
+      alert("Please assign a team member before saving.");
+      return;
+    }
+  
+    const assignedMember = members.find((member) => member.name === selectedTask.assignedTo);
+  
+    if (!assignedMember) {
+      alert("Invalid member selection. Please select a valid member.");
+      return;
+    }
+  
+    const payload = {
+      taskId: selectedTask.id,
+      memberId: assignedMember._id,
+      status: "In Progress",
+    };
+  
+    axios
+      .post("/api/v1/teamlead/updatetask", payload, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then((response) => {
+        if (response.data.success) {
+          alert("Task updated successfully!");
+          const updatedTask = { ...selectedTask, status: "In Progress" };
+          setTasks(tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)));
+          closePopup();
+        } else {
+          alert("Failed to update task. Please try again.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating task:", error);
+        alert("An error occurred while updating the task.");
+      });
   };
+  
 
   const openRatingModal = () => {
     setRatingModalVisible(true);
@@ -104,16 +184,14 @@ const KanbanBoard = () => {
   const submitRating = () => {
     const updatedTask = {
       ...selectedTask,
-      status: "Evaluated",  // Set the task status to 'Evaluated'
-      rating: ratingValue,  // Save the selected rating
+      status: "Evaluated",
+      rating: ratingValue,
     };
-  
-    // Update the tasks state with the updated task
+
     setTasks(tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)));
-    setSelectedTask(updatedTask); // Update the selected task to reflect the new status and rating
-    setRatingModalVisible(false); // Close the rating modal
+    setSelectedTask(updatedTask);
+    setRatingModalVisible(false);
   };
-  
 
   return (
     <div className="kanban-board">
@@ -121,7 +199,7 @@ const KanbanBoard = () => {
         <div
           key={status}
           className="kanban-column"
-          onDrop={(e) => onDrop(e, status, tasks, setTasks)}
+          onDrop={(e) => onDrop(e, status)}
           onDragOver={(e) => e.preventDefault()}
         >
           <h3 className="column-header">{status}</h3>
@@ -136,23 +214,13 @@ const KanbanBoard = () => {
                 onClick={() => setSelectedTask(task)}
               >
                 <div className="task-title">{task.title}</div>
-                {task.rating && (
-                  <div className="task-rating">
-                    Rating: {task.rating}
-                  </div>
-                )}
-                <div className="task-labels">
-                  {task.labels.map((label, index) => (
-                    <span key={index} className={`task-label ${label.toLowerCase()}`}>
-                      {label}
-                    </span>
-                  ))}
-                </div>
+                {task.rating && <div className="task-rating">Rating: {task.rating}</div>}
               </div>
             ))}
         </div>
       ))}
 
+      {/* Selected Task Popup */}
       {selectedTask && (
         <div className="popup-overlay">
           <div className="popup">
@@ -184,7 +252,11 @@ const KanbanBoard = () => {
                 <h4>Status</h4>
                 <select
                   value={selectedTask.status}
-                  onChange={(e) => updateTaskStatus(e.target.value)}
+                  onChange={(e) => {
+                    const updatedTask = { ...selectedTask, status: e.target.value };
+                    setSelectedTask(updatedTask);
+                    setTasks(tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)));
+                  }}
                   className="dropdown"
                   disabled={selectedTask.status === "Evaluated"}
                 >
@@ -196,16 +268,15 @@ const KanbanBoard = () => {
                 </select>
 
                 {selectedTask.rating && (
-                <div className="task-rating">
-                  <h4>Rating</h4>
-                  <p>{selectedTask.rating}</p>
-                </div>
-              )}
-
+                  <div className="task-rating">
+                    <h4>Rating</h4>
+                    <p>{selectedTask.rating}</p>
+                  </div>
+                )}
 
                 <h4>Assigned To</h4>
                 <select
-                  value={selectedTask.assignedTo}
+                  value={selectedTask.assignedTo || ""}
                   onChange={(e) => {
                     const updatedTask = { ...selectedTask, assignedTo: e.target.value };
                     setSelectedTask(updatedTask);
@@ -213,12 +284,14 @@ const KanbanBoard = () => {
                   }}
                   className="dropdown"
                 >
+                  <option value="">Select a member</option>
                   {members.map((member) => (
-                    <option key={member} value={member}>
-                      {member}
+                    <option key={member._id} value={member.name}>
+                      {member.name}
                     </option>
                   ))}
                 </select>
+
 
                 {/* Only show Evaluate button if status is 'Completed' */}
                 {selectedTask.status === "Completed" && (
@@ -233,13 +306,17 @@ const KanbanBoard = () => {
                 <div className="comments-section">
                   {selectedTask.comments.map((comment, index) => (
                     <div key={index} className="comment">
-                      <p><strong>{comment.author}</strong> - {new Date(comment.timestamp).toLocaleString()}</p>
+                      <p>
+                        <strong>{comment.author}</strong> - {new Date(comment.timestamp).toLocaleString()}
+                      </p>
                       <p>{comment.text}</p>
                       {comment.files.length > 0 && (
                         <ul className="comment-files">
                           {comment.files.map((file, idx) => (
                             <li key={idx}>
-                              <a href={`#${file.name}`} download>{file.name}</a>
+                              <a href={`#${file}`} download>
+                                {file}
+                              </a>
                             </li>
                           ))}
                         </ul>
