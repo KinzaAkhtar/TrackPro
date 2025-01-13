@@ -3,27 +3,22 @@ import sidebarLogo from '../../assets/sidebarLogo.png';
 import LogoutLogo from '../../assets/LogoutLogoWhite.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Avatar from 'react-avatar';
-import { FaCalendarCheck, FaDollarSign, FaHome, FaUserFriends, FaTachometerAlt, FaCog } from 'react-icons/fa';
+import { FaCalendarCheck, FaCog, FaDollarSign, FaHome, FaTasks } from 'react-icons/fa';
 import axios from 'axios';
 
-const AdminSidebar = () => {
+const EmployeeSidebar = () => {
+    const [user, setUser] = useState(null); // State to store user data
     const navigate = useNavigate(); // Hook to navigate to the login page
-    const [user, setUser] = useState(null); // State to hold the user details
 
     // Function to handle logout and redirect to login
     const handleLogout = async () => {
         try {
-            // Call the backend to clear the HttpOnly cookie (Uncomment when backend is ready)
             const response = await axios.post('/api/v1/user/logout');
             if (response.data.success) {
                 console.log(response.data.message);
             }
-
-            // Clear any additional client-side storage
-            localStorage.clear();
-
-            // Redirect the user to the login page
-            navigate('/login');
+            localStorage.clear(); // Clear additional client-side storage
+            navigate('/login'); // Redirect to login page
         } catch (error) {
             console.error('Error during logout:', error);
         }
@@ -31,55 +26,51 @@ const AdminSidebar = () => {
 
     // Retrieve user information from localStorage when the component mounts
     useEffect(() => {
-        const userData = JSON.parse(localStorage.getItem("user"));
+        const userData = localStorage.getItem("user");
         if (userData) {
-            setUser(userData); // Set user details in the state
+            setUser(JSON.parse(userData)); // Set user details in the state
         }
     }, []);
 
     return (
         <div className="bg-gradient-to-t from-red-700 via-orange-700 to-yellow-300 text-white h-[95vh] fixed left-3 top-3 bottom-0 space-y-2 w-64 rounded-lg">
             <div className="bg-white">
-                <img src={sidebarLogo} alt="Image 1" className="w-25 mt-2" />
+                <img src={sidebarLogo} alt="Sidebar Logo" className="w-25 mt-2" />
             </div>
             <div className="bg-white bg-opacity-30 p-4 rounded-lg shadow-lg backdrop-blur-lg max-w-xs mx-auto flex justify-center items-center mt-4">
-                <Avatar name={user ? user.name : "User"} size="40" round={true} />
-                <div className="profileContent">
-                    <p className="name ml-4 text-sm">{user ? user.name : "Username here"}</p>
-                    <p className="name ml-4 text-sm">{user ? user.workemail : "username@gmail.com"}</p>
+                <Avatar name={user?.name || "User"} size="40" round={true} />
+                <div className="ml-4 text-sm">
+                    <p>{user?.name || "Username here"}</p>
+                    <p>{user?.workemail || "username@gmail.com"}</p>
                 </div>
             </div>
             <div className="mt-8">
-                <NavLink to="/admin-dashboard" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`} end>
+                <NavLink to="/employee-dashboard" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : ""} flex items-center py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
                     <FaHome className="mr-2" />
                     <span>Dashboard</span>
                 </NavLink>
-                <NavLink to="/admin-dashboard/employee" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
-                    <FaUserFriends className="mr-2" />
-                    <span>Employees</span>
-                </NavLink>
-                <NavLink to="/admin-dashboard/attend-manage" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
+                <NavLink to="/employee-dashboard/attendance-and-leaves" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : ""} flex items-center py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
                     <FaCalendarCheck className="mr-2" />
-                    <span>Attendance Management</span>
+                    <span>Attendance and Leaves</span>
                 </NavLink>
-                <NavLink to="/admin-dashboard/payroll" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : " "} flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
+                <NavLink to="/employee-dashboard/payroll" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : ""} flex items-center py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
                     <FaDollarSign className="mr-2" />
                     <span>Payroll</span>
                 </NavLink>
-                <NavLink to="admin-dashboard/performance" className="flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg">
-                    <FaTachometerAlt className="mr-2" />
-                    <span>Performance Monitoring</span>
+                <NavLink to="/employee-dashboard/tasks" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : ""} flex items-center py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
+                    <FaTasks className="mr-2" />
+                    <span>Tasks</span>
                 </NavLink>
-                <NavLink to="admin-dashboard/settings" className="flex items-center space-x-4 block py-2.5 px-4 hover:bg-yellow-600 rounded-lg">
+                <NavLink to="/employee-dashboard/settings" className={({ isActive }) => `${isActive ? "bg-white bg-opacity-20" : ""} flex items-center py-2.5 px-4 hover:bg-yellow-600 rounded-lg`}>
                     <FaCog className="mr-2" />
                     <span>Settings</span>
                 </NavLink>
             </div>
-            <div className="absolute bottom-4 left-4">
-                <img src={LogoutLogo} alt="Logout" className="h-auto max-w-40" />
+            <div className="absolute bottom-4 left-4 flex items-center space-x-2">
+                <img src={LogoutLogo} alt="Logout" className="h-6 w-6" />
                 <button
                     onClick={handleLogout}
-                    className="absolute top-1/2 mt-5 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-700 bg-opacity-60 text-lg font-bold px-4 py-1 rounded-lg hover:bg-red-800 hover:bg-opacity-80">
+                    className="bg-red-700 bg-opacity-60 text-lg font-bold px-4 py-2 rounded-lg hover:bg-red-800 hover:bg-opacity-80">
                     Logout
                 </button>
             </div>
@@ -87,4 +78,4 @@ const AdminSidebar = () => {
     );
 };
 
-export default AdminSidebar;
+export default EmployeeSidebar;

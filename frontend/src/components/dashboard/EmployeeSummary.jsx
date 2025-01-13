@@ -34,7 +34,7 @@ const Dashboard = () => {
       {/* System Admin Dashboard Section */}
       <div style={styles.employeeDashboardSection}>
         <div style={styles.employeeCard}>
-          <h3 style={styles.employeeTitle}>Welcome Back, Hiba!</h3>
+          <h3 style={styles.employeeTitle}>Welcome to Track Pro!</h3>
           <div style={styles.buttonContainer}>
             <Button
               variant="contained"
@@ -127,7 +127,7 @@ const summaryData = [
   {
     title: <b>Total Working Hours</b>,
     value: "120 hrs",
-    color:" rgba(245, 158, 11, 0.5)",
+    color: " rgba(245, 158, 11, 0.5)",
     chartData: {
       labels: ["Worked", "Remaining"],
       datasets: [
@@ -141,7 +141,7 @@ const summaryData = [
   {
     title: <b>Attendance Percentage</b>,
     value: "95%",
-    color:" rgba(245, 158, 11, 0.5)",
+    color: " rgba(245, 158, 11, 0.5)",
     chartData: {
       labels: ["Present", "Absent"],
       datasets: [

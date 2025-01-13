@@ -36,8 +36,8 @@ const AdminSidebar = () => {
             <div className="bg-white bg-opacity-30 p-4 rounded-lg shadow-lg backdrop-blur-lg max-w-xs mx-auto flex justify-center items-center mt-4">
                 <Avatar name="avatar" size="40" round={true} />
                 <div className="profileContent">
-                    <p className="name ml-4 text-sm">Username here</p>
-                    <p className="name ml-4 text-sm">username@gmail.com</p>
+                    <p className="name ml-4 text-sm">Admin</p>
+                    <p className="name ml-4 text-sm">admin@trackpro.com</p>
                 </div>
             </div>
             <div className="mt-8">
