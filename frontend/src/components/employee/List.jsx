@@ -25,6 +25,7 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const List = () => {
+
   const [employees, setEmployees] = useState([]); // Initialize with an empty array
   const [search, setSearch] = useState("");
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -48,6 +49,8 @@ const List = () => {
     };
     fetchEmployees();
   }, []); // Empty dependency array ensures it runs once on component mount
+  
+   
 
   const handleSearch = (event) => {
     setSearch(event.target.value);
@@ -146,6 +149,7 @@ const List = () => {
                 <TableCell>Work Email</TableCell>
                 <TableCell>Department</TableCell>
                 <TableCell>Phone No.</TableCell>
+                <TableCell>Salary</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -158,6 +162,7 @@ const List = () => {
                   <TableCell>{row.workemail}</TableCell>
                   <TableCell>{row.department}</TableCell>
                   <TableCell>{row.phoneno}</TableCell>
+                  <TableCell>{row.salary}</TableCell>
                   <TableCell>
                     <IconButton onClick={(event) => handleMenuClick(event, row._id)}>
                       <MoreVertIcon />

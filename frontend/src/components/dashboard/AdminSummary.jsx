@@ -1,8 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, {useEffect} from "react";
+import { Link, useOutletContext } from "react-router-dom";
 import { Card, CardContent, Typography, Grid, Box } from "@mui/material";
 import { Doughnut, Line, Bar, Pie } from "react-chartjs-2";
 import {Chart as ChartJS,CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcElement,PointElement,LineElement,} from "chart.js";
+import axios from "axios"; // If using axios
+
 import List from '../employee/List';
 
 
@@ -10,23 +12,85 @@ import List from '../employee/List';
 ChartJS.register(CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,ArcElement,PointElement,LineElement);
 
 const AdminSummary = () => {
-  const cardData = [
-    { title: "Total Employees", value: 50, bgColor: "bg-yellow-500/70"  },
-    { title: "Headcount: Male/Female", value: "15/20",  bgColor: "bg-yellow-500/70"  },
-    { title: "Present Employees (Today)", value: 45,  bgColor: "bg-yellow-500/70"  },
-    { title: "Total Tasks", value: 100,  bgColor: "bg-yellow-500/70"  },
+  const [employeeCount, setEmployeeCount] = React.useState(0);
+  console.log("Employee Count in AdminSummary:", employeeCount); // Check if the count is passed correctly
+  const [taskCount, setTaskCount] = React.useState(0);
+  console.log("Task Count in AdminSummary:", taskCount); // Check if the count is passed correctly
 
-  ];
+  
   const employeeOfTheMonth = "John Doe"; // Best KPI employee
   const departmentOfTheMonth = "Design"; // Best department with more completed task
+  const [maleCount, setMaleCount] = React.useState(0);
+  const [femaleCount, setFemaleCount] = React.useState(0);
+  const [loading, setLoading] = React.useState(true); // Added loading state
+
+  
+  const cardData = [
+    { title: "Total Employees", value: loading ? "Loading..." :  `${employeeCount}`, bgColor: "bg-yellow-500/70"  }, // Show loading message while data is fetching
+    { 
+      title: "Headcount: Male/Female", 
+      value: loading ? "Loading..." : `${maleCount}/${femaleCount}`,  // Show loading message while data is fetching
+      bgColor: "bg-yellow-500/70" 
+    },
+    { title: "Total Tasks", value: loading ? "Loading..." : `${taskCount}`,  bgColor: "bg-yellow-500/70"  }, // Show loading message while data is fetching
+    { title: "Present Employees (Today)", value: 45,  bgColor: "bg-yellow-500/70"  },
+  ];
+  {/*Get Headcount card data*/}
+  useEffect(() => {
+    const fetchHeadcount = async () => {
+      try {
+        const response = await axios.get('/api/v1/admin/getheadcount');
+        console.log("API Response:", response.data); // Log the full response
+        const { maleCount, femaleCount } = response.data.data;
+        setMaleCount(maleCount);  // Set the male count
+        setFemaleCount(femaleCount);  // Set the female count
+        setLoading(false);  // Set loading to false after data is fetched
+      } catch (error) {
+        console.error("Error fetching headcount data:", error);
+      }
+    };
+    fetchHeadcount();
+  }, []);
+  
+ // Fetch employee count
+ useEffect(() => {
+  const fetchCount = async () => {
+    try {
+      const response = await axios.get('/api/v1/admin/getcount');
+      console.log("API Response:", response.data); // Log the full response
+      const { data: employeeCount } = response.data; // Extract employee count
+      setEmployeeCount(employeeCount);  // Set the employee count
+      setLoading(false);  // Set loading to false after data is fetched
+    } catch (error) {
+      console.error("Error fetching employee count:", error);
+    }
+  };
+  fetchCount();
+}, []);
+
+ // Fetch task count
+ useEffect(() => {
+  const fetchTaskCount = async () => {
+    try {
+      const response = await axios.get('/api/v1/admin/gettaskcount');
+      console.log("API Response:", response.data); // Log the full response
+      const { data: taskCount } = response.data; // Extract employee count
+      setTaskCount(taskCount);  // Set the employee count
+      setLoading(false);  // Set loading to false after data is fetched
+    } catch (error) {
+      console.error("Error fetching employee count:", error);
+    }
+  };
+  fetchTaskCount();
+}, []);
 
     // Department-wise employee distribution chart data
     const departmentData = {
-        labels: ["HR", "Engineering", "Marketing", "Sales", "Finance"],
+        labels: ["EBook", "Marketing", "Content Writing", "Web Development", "Design", "Publication", "Outsourcing", "Video"],
         datasets: [
           {
-            data: [30, 40, 10, 15, 5],
-            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+            data: [30, 40, 10, 15, 5,7,4,5],
+            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF","#FFFF67","#FF6280", "#36A2EB" ],
             hoverOffset: 4,
           },
         ],

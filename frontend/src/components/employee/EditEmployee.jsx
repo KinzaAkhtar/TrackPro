@@ -34,7 +34,7 @@ const EditEmployee = ({ employee, onClose, onSave }) => {
           name="name"
           variant="outlined"
           fullWidth
-          value={formData.fullname}
+          value={formData.name}
           onChange={handleInputChange}
           className="bg-white"
         />
@@ -49,10 +49,10 @@ const EditEmployee = ({ employee, onClose, onSave }) => {
         />
         <TextField
           label="Work Email"
-          name="workEmail"
+          name="workemail"
           variant="outlined"
           fullWidth
-          value={formData.workEmail}
+          value={formData.workemail}
           onChange={handleInputChange}
           className="bg-white"
         />
@@ -61,16 +61,16 @@ const EditEmployee = ({ employee, onClose, onSave }) => {
           name="phoneno"
           variant="outlined"
           fullWidth
-          value={formData.phoneNo}
+          value={formData.phoneno}
           onChange={handleInputChange}
           className="bg-white"
         />
         <TextField
           label="Department"
-          name="dept"
+          name="department"
           variant="outlined"
           fullWidth
-          value={formData.dept}
+          value={formData.department}
           onChange={handleInputChange}
           className="bg-white"
         />
