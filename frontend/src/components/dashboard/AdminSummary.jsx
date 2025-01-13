@@ -26,24 +26,22 @@ const AdminSummary = () => {
 
   
   const cardData = [
-    { title: "Total Employees", value:   `${employeeCount}`, bgColor: "bg-yellow-500/70"  },
+    { title: "Total Employees", value: loading ? "Loading..." :  `${employeeCount}`, bgColor: "bg-yellow-500/70"  }, // Show loading message while data is fetching
     { 
       title: "Headcount: Male/Female", 
       value: loading ? "Loading..." : `${maleCount}/${femaleCount}`,  // Show loading message while data is fetching
       bgColor: "bg-yellow-500/70" 
     },
+    { title: "Total Tasks", value: loading ? "Loading..." : `${taskCount}`,  bgColor: "bg-yellow-500/70"  }, // Show loading message while data is fetching
     { title: "Present Employees (Today)", value: 45,  bgColor: "bg-yellow-500/70"  },
-    { title: "Total Tasks", value: `${taskCount}`,  bgColor: "bg-yellow-500/70"  },
   ];
+  {/*Get Headcount card data*/}
   useEffect(() => {
     const fetchHeadcount = async () => {
       try {
-        const response = await axios.get('/api/v1/admin/getheadcount'); // Your API endpoint here
+        const response = await axios.get('/api/v1/admin/getheadcount');
         console.log("API Response:", response.data); // Log the full response
-  
-        // Correcting the destructuring based on the response format
-        const { maleCount, femaleCount } = response.data.data; // Correct key names as per API response
-  
+        const { maleCount, femaleCount } = response.data.data;
         setMaleCount(maleCount);  // Set the male count
         setFemaleCount(femaleCount);  // Set the female count
         setLoading(false);  // Set loading to false after data is fetched
@@ -51,7 +49,6 @@ const AdminSummary = () => {
         console.error("Error fetching headcount data:", error);
       }
     };
-  
     fetchHeadcount();
   }, []);
   
@@ -61,17 +58,13 @@ const AdminSummary = () => {
     try {
       const response = await axios.get('/api/v1/admin/getcount');
       console.log("API Response:", response.data); // Log the full response
-      
-      // Assuming the API returns the count inside response.data (like `data: 12`)
       const { data: employeeCount } = response.data; // Extract employee count
-      
       setEmployeeCount(employeeCount);  // Set the employee count
       setLoading(false);  // Set loading to false after data is fetched
     } catch (error) {
       console.error("Error fetching employee count:", error);
     }
   };
-
   fetchCount();
 }, []);
 
@@ -81,27 +74,23 @@ const AdminSummary = () => {
     try {
       const response = await axios.get('/api/v1/admin/gettaskcount');
       console.log("API Response:", response.data); // Log the full response
-      
-      // Assuming the API returns the count inside response.data (like `data: 12`)
       const { data: taskCount } = response.data; // Extract employee count
-      
       setTaskCount(taskCount);  // Set the employee count
       setLoading(false);  // Set loading to false after data is fetched
     } catch (error) {
       console.error("Error fetching employee count:", error);
     }
   };
-
   fetchTaskCount();
 }, []);
 
     // Department-wise employee distribution chart data
     const departmentData = {
-        labels: ["HR", "Engineering", "Marketing", "Sales", "Finance"],
+        labels: ["EBook", "Marketing", "Content Writing", "Web Development", "Design", "Publication", "Outsourcing", "Video"],
         datasets: [
           {
-            data: [30, 40, 10, 15, 5],
-            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+            data: [30, 40, 10, 15, 5,7,4,5],
+            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF","#FFFF67","#FF6280", "#36A2EB" ],
             hoverOffset: 4,
           },
         ],
